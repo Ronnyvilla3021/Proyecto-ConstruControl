@@ -1,0 +1,22 @@
+# .NET
+backend/**/bin/
+backend/**/obj/
+backend/**/*.user
+.vs/
+
+# Angular / Node
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# Archivos subidos (facturas, fotos) - no van al repo
+backend/**/wwwroot/uploads/
+
+# Entorno / secretos
+**/appsettings.Development.json
+**/.env
+*.env.local
+
+# Sistema
+.DS_Store
+Thumbs.db
