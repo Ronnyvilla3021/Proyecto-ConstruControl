@@ -29,6 +29,7 @@ builder.Services.AddDbContext<ConstruControlDbContext>(options =>
 
 // Repositorios y servicios propios
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IObraRepository, ObraRepository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 
 // Autenticacion JWT
