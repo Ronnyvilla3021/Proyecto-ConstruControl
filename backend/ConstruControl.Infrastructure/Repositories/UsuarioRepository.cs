@@ -25,6 +25,11 @@ public class UsuarioRepository : IUsuarioRepository
         return await _context.Usuarios.AnyAsync(u => u.Email == email);
     }
 
+    public async Task<bool> ExisteAlgunUsuarioAsync()
+    {
+        return await _context.Usuarios.AnyAsync();
+    }
+
     public async Task AgregarAsync(Usuario usuario)
     {
         await _context.Usuarios.AddAsync(usuario);
