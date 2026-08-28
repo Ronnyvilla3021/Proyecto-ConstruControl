@@ -29,6 +29,8 @@ builder.Services.AddScoped<IConsumoRepository, ConsumoRepository>();
 builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
 builder.Services.AddScoped<IAsistenciaRepository, AsistenciaRepository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<INotificacionRepository, ConstruControl.Infrastructure.Repositories.NotificacionRepository>();
+builder.Services.AddHostedService<ConstruControl.API.BackgroundServices.AutomationEngine>();
 
 var jwtSection = builder.Configuration.GetSection("Jwt");
 var jwtKey = jwtSection["Key"]
