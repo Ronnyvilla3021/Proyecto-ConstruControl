@@ -32,6 +32,7 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IObraRepository, ObraRepository>();
 builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
 builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
+builder.Services.AddScoped<ICompraRepository, CompraRepository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 
 // Autenticacion JWT
