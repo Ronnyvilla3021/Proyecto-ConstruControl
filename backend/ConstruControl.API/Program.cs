@@ -48,6 +48,10 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    // Evita que .NET renombre automaticamente claims cortos (ej. "sub")
+    // a URIs largas de ClaimTypes. Asi los claims llegan tal cual los generamos.
+    options.MapInboundClaims = false;
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
