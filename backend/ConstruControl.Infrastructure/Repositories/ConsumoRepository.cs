@@ -1,0 +1,68 @@
+using ConstruControl.Application.Interfaces;
+using ConstruControl.Domain.Entities;
+using ConstruControl.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+
+namespace ConstruControl.Infrastructure.Repositories;
+
+public class ConsumoRepository : IConsumoRepository
+{
+    private readonly ConstruControlDbContext _context;
+
+    public ConsumoRepository(ConstruControlDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<List<Consumo>> ObtenerTodosAsync()
+    {
+        return await _context.Consumos
+            .Include(c => c.Material)
+            .Include(c => c.Obra)
+            .Include(c => c.Responsable)
+            .OrderByDescending(c => c.Fecha)
+            .ToListAsync();
+    }
+
+    public async Task<Consumo?> RegistrarAsync(int materialId, int obraId, int responsableId, decimal cantidad)
+    {
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            var material = await _context.Materiales
+                .FirstOrDefaultAsync(m => m.Id == materialId && m.Activo);
+
+            if (material is null || material.Stock < cantidad)
+            {
+                return null; // Sin stock suficiente (o material inexistente)
+            }
+
+            material.Stock -= cantidad;
+
+            var consumo = new Consumo
+            {
+                MaterialId = materialId,
+                ObraId = obraId,
+                ResponsableId = responsableId,
+                Cantidad = cantidad,
+                Fecha = DateTime.UtcNow
+            };
+
+            await _context.Consumos.AddAsync(consumo);
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            // Recargar con navegaciones para el DTO de respuesta
+            return await _context.Consumos
+                .Include(c => c.Material)
+                .Include(c => c.Obra)
+                .Include(c => c.Responsable)
+                .FirstAsync(c => c.Id == consumo.Id);
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
+}
