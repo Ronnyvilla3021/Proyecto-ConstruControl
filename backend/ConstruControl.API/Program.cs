@@ -1,4 +1,6 @@
 using System.Text;
+using ConstruControl.API.BackgroundServices;
+using ConstruControl.API.Hubs;
 using ConstruControl.Application.Interfaces;
 using ConstruControl.Infrastructure.Persistence;
 using ConstruControl.Infrastructure.Repositories;
@@ -20,6 +22,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ConstruControlDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Repositorios y servicios propios
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IObraRepository, ObraRepository>();
 builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
@@ -29,8 +32,26 @@ builder.Services.AddScoped<IConsumoRepository, ConsumoRepository>();
 builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
 builder.Services.AddScoped<IAsistenciaRepository, AsistenciaRepository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<INotificacionRepository, ConstruControl.Infrastructure.Repositories.NotificacionRepository>();
-builder.Services.AddHostedService<ConstruControl.API.BackgroundServices.AutomationEngine>();
+builder.Services.AddScoped<INotificacionRepository, NotificacionRepository>();
+builder.Services.AddHostedService<AutomationEngine>();
+
+// SignalR - tiempo real
+builder.Services.AddSignalR();
+
+// CORS - necesario para que Angular (localhost:4200) pueda conectarse
+// tanto a la API REST como al hub de SignalR. AllowCredentials es
+// obligatorio para SignalR, por eso no se puede usar "AllowAnyOrigin".
+const string CorsPolicyFrontend = "FrontendPolicy";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(CorsPolicyFrontend, policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 
 var jwtSection = builder.Configuration.GetSection("Jwt");
 var jwtKey = jwtSection["Key"]
@@ -54,6 +75,24 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtSection["Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
     };
+
+    // SignalR envia el token por query string (no por header Authorization),
+    // asi que hay que leerlo de ahi cuando la conexion es al hub.
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+            {
+                context.Token = accessToken;
+            }
+
+            return Task.CompletedTask;
+        }
+    };
 });
 
 builder.Services.AddAuthorization();
@@ -66,8 +105,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors(CorsPolicyFrontend);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<DashboardHub>("/hubs/dashboard");
 
 app.Run();
