@@ -8,14 +8,16 @@ namespace ConstruControl.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize] // Todos los endpoints requieren estar logueado
+[Authorize]
 public class ObrasController : ControllerBase
 {
     private readonly IObraRepository _obraRepository;
+    private readonly ILogRepository _logRepository;
 
-    public ObrasController(IObraRepository obraRepository)
+    public ObrasController(IObraRepository obraRepository, ILogRepository logRepository)
     {
         _obraRepository = obraRepository;
+        _logRepository = logRepository;
     }
 
     [HttpGet]
@@ -88,6 +90,9 @@ public class ObrasController : ControllerBase
 
         _obraRepository.EliminarLogico(obra);
         await _obraRepository.GuardarCambiosAsync();
+
+        var usuarioId = int.Parse(User.FindFirst("sub")!.Value);
+        await _logRepository.RegistrarAsync(usuarioId, "Eliminar", "Obra", obra.Id, $"Obra '{obra.Nombre}' eliminada (soft delete).");
 
         return NoContent();
     }

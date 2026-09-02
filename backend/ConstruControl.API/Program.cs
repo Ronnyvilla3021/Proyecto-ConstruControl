@@ -37,6 +37,7 @@ builder.Services.AddScoped<IReporteService, ReporteService>();
 builder.Services.AddScoped<IArchivoStorageService, ArchivoStorageService>();
 builder.Services.AddScoped<IFacturaRepository, FacturaRepository>();
 builder.Services.AddScoped<IFotoObraRepository, FotoObraRepository>();
+builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddHostedService<AutomationEngine>();
 
 // SignalR - tiempo real
