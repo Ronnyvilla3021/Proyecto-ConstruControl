@@ -6,10 +6,14 @@ public class ArchivoStorageService : IArchivoStorageService
 {
     private readonly string _rutaBase;
 
-    public ArchivoStorageService()
+    /// <summary>
+    /// rutaBase es la carpeta raiz del proyecto API (ContentRootPath), inyectada
+    /// desde Program.cs. Asi Infrastructure no depende directamente de tipos de
+    /// ASP.NET Core como IWebHostEnvironment.
+    /// </summary>
+    public ArchivoStorageService(string rutaBase)
     {
-        // wwwroot/uploads - ya excluido del repo por .gitignore
-        _rutaBase = Path.Combine(AppContext.BaseDirectory, "wwwroot", "uploads");
+        _rutaBase = Path.Combine(rutaBase, "wwwroot", "uploads");
     }
 
     public async Task<string> GuardarArchivoAsync(Stream contenido, string nombreOriginal, string carpeta)
@@ -24,7 +28,6 @@ public class ArchivoStorageService : IArchivoStorageService
         await using var archivoDestino = new FileStream(rutaCompleta, FileMode.Create);
         await contenido.CopyToAsync(archivoDestino);
 
-        // Ruta relativa para guardar en BD (independiente del disco/maquina)
         return Path.Combine("uploads", carpeta, nombreUnico).Replace("\\", "/");
     }
 }
