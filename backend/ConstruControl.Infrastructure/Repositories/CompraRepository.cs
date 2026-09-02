@@ -8,10 +8,12 @@ namespace ConstruControl.Infrastructure.Repositories;
 public class CompraRepository : ICompraRepository
 {
     private readonly ConstruControlDbContext _context;
+    private readonly IRealtimeNotifier _realtimeNotifier;
 
-    public CompraRepository(ConstruControlDbContext context)
+    public CompraRepository(ConstruControlDbContext context, IRealtimeNotifier realtimeNotifier)
     {
         _context = context;
+        _realtimeNotifier = realtimeNotifier;
     }
 
     public async Task<List<Compra>> ObtenerTodasAsync()
@@ -47,8 +49,6 @@ public class CompraRepository : ICompraRepository
 
     public async Task<bool> RecepcionarAsync(int compraId)
     {
-        // Transaccion: si algo falla, nada se aplica (ni el cambio de estado
-        // ni el incremento de stock quedan a medias).
         await using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
@@ -72,6 +72,13 @@ public class CompraRepository : ICompraRepository
 
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
+
+            // Fuera de la transaccion (ya confirmada) - notifica a los clientes conectados
+            await _realtimeNotifier.NotificarActualizacionDashboardAsync(
+                compra.ObraId,
+                "CompraRecepcionada",
+                new { compraId = compra.Id, total = compra.Total });
+
             return true;
         }
         catch

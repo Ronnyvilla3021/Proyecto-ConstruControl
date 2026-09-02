@@ -37,6 +37,7 @@ builder.Services.AddHostedService<AutomationEngine>();
 
 // SignalR - tiempo real
 builder.Services.AddSignalR();
+builder.Services.AddSingleton<ConstruControl.Application.Interfaces.IRealtimeNotifier, ConstruControl.API.Realtime.SignalRRealtimeNotifier>();
 
 // CORS - necesario para que Angular (localhost:4200) pueda conectarse
 // tanto a la API REST como al hub de SignalR. AllowCredentials es

@@ -8,10 +8,12 @@ namespace ConstruControl.Infrastructure.Repositories;
 public class ConsumoRepository : IConsumoRepository
 {
     private readonly ConstruControlDbContext _context;
+    private readonly IRealtimeNotifier _realtimeNotifier;
 
-    public ConsumoRepository(ConstruControlDbContext context)
+    public ConsumoRepository(ConstruControlDbContext context, IRealtimeNotifier realtimeNotifier)
     {
         _context = context;
+        _realtimeNotifier = realtimeNotifier;
     }
 
     public async Task<List<Consumo>> ObtenerTodosAsync()
@@ -34,7 +36,7 @@ public class ConsumoRepository : IConsumoRepository
 
             if (material is null || material.Stock < cantidad)
             {
-                return null; // Sin stock suficiente (o material inexistente)
+                return null;
             }
 
             material.Stock -= cantidad;
@@ -52,12 +54,18 @@ public class ConsumoRepository : IConsumoRepository
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
 
-            // Recargar con navegaciones para el DTO de respuesta
-            return await _context.Consumos
+            var consumoCompleto = await _context.Consumos
                 .Include(c => c.Material)
                 .Include(c => c.Obra)
                 .Include(c => c.Responsable)
                 .FirstAsync(c => c.Id == consumo.Id);
+
+            await _realtimeNotifier.NotificarActualizacionDashboardAsync(
+                obraId,
+                "ConsumoRegistrado",
+                new { materialNombre = material.Nombre, cantidad, stockRestante = material.Stock });
+
+            return consumoCompleto;
         }
         catch
         {
