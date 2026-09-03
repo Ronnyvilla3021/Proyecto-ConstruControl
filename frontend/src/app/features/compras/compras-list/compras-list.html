@@ -1,1 +1,82 @@
-<p>compras-list works!</p>
+<div class="compras-container">
+  <div class="header">
+    <h1>Compras</h1>
+    <button (click)="toggleFormulario()">
+      {{ mostrarFormulario() ? 'Cancelar' : 'Nueva Compra' }}
+    </button>
+  </div>
+
+  @if (errorMensaje()) {
+    <div class="error-general">{{ errorMensaje() }}</div>
+  }
+
+  @if (mostrarFormulario()) {
+    <form [formGroup]="form" (ngSubmit)="crearCompra()" class="form-crear">
+      <select formControlName="proveedorId">
+        <option value="">Seleccione proveedor</option>
+        @for (proveedor of proveedores(); track proveedor.id) {
+          <option [value]="proveedor.id">{{ proveedor.nombre }}</option>
+        }
+      </select>
+
+      <select formControlName="obraId">
+        <option value="">Seleccione obra</option>
+        @for (obra of obras(); track obra.id) {
+          <option [value]="obra.id">{{ obra.nombre }}</option>
+        }
+      </select>
+
+      <div formArrayName="detalles">
+        @for (linea of detalles.controls; track $index) {
+          <div [formGroupName]="$index" class="linea-detalle">
+            <select formControlName="materialId">
+              <option value="">Seleccione material</option>
+              @for (material of materiales(); track material.id) {
+                <option [value]="material.id">{{ material.nombre }}</option>
+              }
+            </select>
+            <input formControlName="cantidad" type="number" placeholder="Cantidad" />
+            <input formControlName="precioUnitario" type="number" placeholder="Precio unitario" />
+            <button type="button" (click)="quitarLinea($index)">Quitar</button>
+          </div>
+        }
+      </div>
+
+      <button type="button" (click)="agregarLinea()">+ Agregar material</button>
+      <button type="submit">Guardar compra</button>
+    </form>
+  }
+
+  @if (cargando()) {
+    <p>Cargando...</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Proveedor</th>
+          <th>Obra</th>
+          <th>Total</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (compra of compras(); track compra.id) {
+          <tr>
+            <td>{{ compra.fecha | date:'short' }}</td>
+            <td>{{ compra.proveedorNombre }}</td>
+            <td>{{ compra.obraNombre }}</td>
+            <td>{{ compra.total | number:'1.2-2' }}</td>
+            <td>{{ compra.estado }}</td>
+            <td>
+              @if (compra.estado === 'Pendiente') {
+                <button (click)="recepcionar(compra.id)">Recepcionar</button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
