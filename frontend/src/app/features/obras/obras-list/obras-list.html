@@ -1,1 +1,54 @@
-<p>obras-list works!</p>
+<div class="obras-container">
+  <div class="header">
+    <h1>Obras</h1>
+    <button (click)="toggleFormulario()">
+      {{ mostrarFormulario() ? 'Cancelar' : 'Nueva Obra' }}
+    </button>
+  </div>
+
+  @if (errorMensaje()) {
+    <div class="error-general">{{ errorMensaje() }}</div>
+  }
+
+  @if (mostrarFormulario()) {
+    <form [formGroup]="form" (ngSubmit)="crearObra()" class="form-crear">
+      <input formControlName="nombre" placeholder="Nombre de la obra" />
+      <input formControlName="ubicacion" placeholder="Ubicación" />
+      <input formControlName="presupuesto" type="number" placeholder="Presupuesto" />
+      <input formControlName="fechaInicio" type="date" />
+      <button type="submit">Guardar</button>
+    </form>
+  }
+
+  @if (cargando()) {
+    <p>Cargando...</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Ubicación</th>
+          <th>Presupuesto</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (obra of obras(); track obra.id) {
+          <tr>
+            <td><a [routerLink]="['/dashboard', obra.id]">{{ obra.nombre }}</a></td>
+            <td>{{ obra.ubicacion }}</td>
+            <td>{{ obra.presupuesto | number:'1.2-2' }}</td>
+            <td>{{ obra.estado }}</td>
+            <td>
+              @for (estado of transicionesPermitidas[obra.estado]; track estado) {
+                <button (click)="cambiarEstado(obra, estado)">→ {{ estado }}</button>
+              }
+              <button (click)="eliminarObra(obra.id)">Eliminar</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
