@@ -86,8 +86,8 @@
             <td>{{ asistencia.empleadoNombre }}</td>
             <td>{{ asistencia.obraNombre }}</td>
             <td>{{ asistencia.fecha }}</td>
-            <td>{{ asistencia.horaEntrada }}</td>
-            <td>{{ asistencia.horaSalida || '-' }}</td>
+            <td>{{ asistencia.horaEntrada?.substring(0,8) }}</td>
+            <td>{{ asistencia.horaSalida ? asistencia.horaSalida.substring(0,8) : '-' }}</td>
             <td>
               @if (!asistencia.horaSalida) {
                 <button (click)="registrarSalida(asistencia.id)">Registrar salida</button>
