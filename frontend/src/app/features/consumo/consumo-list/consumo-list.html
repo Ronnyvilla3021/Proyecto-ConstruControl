@@ -1,1 +1,53 @@
-<p>consumo-list works!</p>
+<div class="consumo-container">
+  <h1>Registro de Consumo</h1>
+
+  @if (errorMensaje()) {
+    <div class="error-general">{{ errorMensaje() }}</div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="registrarConsumo()" class="form-crear">
+    <select formControlName="obraId">
+      <option value="">Seleccione obra</option>
+      @for (obra of obras(); track obra.id) {
+        <option [value]="obra.id">{{ obra.nombre }}</option>
+      }
+    </select>
+
+    <select formControlName="materialId">
+      <option value="">Seleccione material</option>
+      @for (material of materiales(); track material.id) {
+        <option [value]="material.id">{{ material.nombre }} (stock: {{ material.stock }})</option>
+      }
+    </select>
+
+    <input formControlName="cantidad" type="number" placeholder="Cantidad" />
+    <button type="submit">Registrar consumo</button>
+  </form>
+
+  @if (cargando()) {
+    <p>Cargando...</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Obra</th>
+          <th>Material</th>
+          <th>Cantidad</th>
+          <th>Responsable</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (consumo of consumos(); track consumo.id) {
+          <tr>
+            <td>{{ consumo.fecha | date:'short' }}</td>
+            <td>{{ consumo.obraNombre }}</td>
+            <td>{{ consumo.materialNombre }}</td>
+            <td>{{ consumo.cantidad }}</td>
+            <td>{{ consumo.responsableNombre }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
