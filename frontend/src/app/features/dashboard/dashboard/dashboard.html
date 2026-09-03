@@ -1,1 +1,61 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+  @if (errorMensaje()) {
+    <div class="error-general">{{ errorMensaje() }}</div>
+  }
+
+  @if (cargando()) {
+    <p>Cargando dashboard...</p>
+  } @else if (data(); as d) {
+    <h1>Dashboard - {{ d.obraNombre }}</h1>
+
+    <div class="widgets">
+      <div class="widget">
+        <h3>Presupuesto</h3>
+        <p>{{ d.presupuesto | number:'1.2-2' }}</p>
+      </div>
+      <div class="widget">
+        <h3>Gasto total</h3>
+        <p>{{ d.gastoTotal | number:'1.2-2' }}</p>
+      </div>
+      <div class="widget">
+        <h3>Avance de presupuesto</h3>
+        <p>{{ d.porcentajePresupuestoUsado | percent:'1.1-1' }}</p>
+      </div>
+      <div class="widget">
+        <h3>Costo diario promedio</h3>
+        <p>{{ d.costoDiarioPromedio | number:'1.2-2' }}</p>
+      </div>
+    </div>
+
+    <h2>Materiales críticos</h2>
+    @if (d.materialesCriticos.length === 0) {
+      <p>No hay materiales críticos.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr><th>Material</th><th>Stock</th><th>Mínimo</th></tr>
+        </thead>
+        <tbody>
+          @for (material of d.materialesCriticos; track material.materialId) {
+            <tr>
+              <td>{{ material.nombre }}</td>
+              <td>{{ material.stock }}</td>
+              <td>{{ material.stockMinimo }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+
+    <h2>Eventos en vivo</h2>
+    @if (eventosEnVivo().length === 0) {
+      <p>Sin eventos aún. Registra una compra o consumo para verlos aparecer aquí en tiempo real.</p>
+    } @else {
+      <ul>
+        @for (evento of eventosEnVivo(); track $index) {
+          <li>{{ evento }}</li>
+        }
+      </ul>
+    }
+  }
+</div>

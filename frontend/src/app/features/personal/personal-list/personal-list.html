@@ -1,1 +1,101 @@
-<p>personal-list works!</p>
+<div class="personal-container">
+  <h1>Personal</h1>
+
+  @if (errorMensaje()) {
+    <div class="error-general">{{ errorMensaje() }}</div>
+  }
+
+  <section>
+    <div class="header">
+      <h2>Empleados</h2>
+      <button (click)="toggleFormEmpleado()">
+        {{ mostrarFormEmpleado() ? 'Cancelar' : 'Nuevo Empleado' }}
+      </button>
+    </div>
+
+    @if (mostrarFormEmpleado()) {
+      <form [formGroup]="formEmpleado" (ngSubmit)="crearEmpleado()" class="form-crear">
+        <input formControlName="nombre" placeholder="Nombre completo" />
+        <input formControlName="cargo" placeholder="Cargo" />
+        <input formControlName="fechaIngreso" type="date" />
+        <button type="submit">Guardar</button>
+      </form>
+    }
+
+    @if (cargando()) {
+      <p>Cargando...</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Cargo</th>
+            <th>Fecha ingreso</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (empleado of empleados(); track empleado.id) {
+            <tr>
+              <td>{{ empleado.nombre }}</td>
+              <td>{{ empleado.cargo }}</td>
+              <td>{{ empleado.fechaIngreso | date:'shortDate' }}</td>
+              <td><button (click)="eliminarEmpleado(empleado.id)">Eliminar</button></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+
+  <section>
+    <h2>Asistencias</h2>
+
+    <form [formGroup]="formEntrada" (ngSubmit)="registrarEntrada()" class="form-crear">
+      <select formControlName="empleadoId">
+        <option value="">Seleccione empleado</option>
+        @for (empleado of empleados(); track empleado.id) {
+          <option [value]="empleado.id">{{ empleado.nombre }}</option>
+        }
+      </select>
+
+      <select formControlName="obraId">
+        <option value="">Seleccione obra</option>
+        @for (obra of obras(); track obra.id) {
+          <option [value]="obra.id">{{ obra.nombre }}</option>
+        }
+      </select>
+
+      <button type="submit">Registrar entrada</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Empleado</th>
+          <th>Obra</th>
+          <th>Fecha</th>
+          <th>Entrada</th>
+          <th>Salida</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (asistencia of asistencias(); track asistencia.id) {
+          <tr>
+            <td>{{ asistencia.empleadoNombre }}</td>
+            <td>{{ asistencia.obraNombre }}</td>
+            <td>{{ asistencia.fecha }}</td>
+            <td>{{ asistencia.horaEntrada }}</td>
+            <td>{{ asistencia.horaSalida || '-' }}</td>
+            <td>
+              @if (!asistencia.horaSalida) {
+                <button (click)="registrarSalida(asistencia.id)">Registrar salida</button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+</div>
