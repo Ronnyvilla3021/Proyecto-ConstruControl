@@ -1,1 +1,58 @@
-/* You can add global styles to this file, and also import other style files */
+/* ==========================================
+   ConstruControl - Estilos globales
+   ========================================== */
+
+@import "primeicons/primeicons.css";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --cc-radius: 16px;
+  --cc-radius-sm: 10px;
+  --cc-sidebar-width: 260px;
+  --cc-topbar-height: 72px;
+
+  /* Acentos por modulo (igual espiritu que la referencia) */
+  --cc-accent-obras: #3B82F6;      /* azul */
+  --cc-accent-materiales: #F59E0B; /* ambar */
+  --cc-accent-compras: #10B981;    /* verde */
+  --cc-accent-personal: #A855F7;   /* morado */
+  --cc-accent-alerta: #EF4444;     /* rojo */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  background: var(--p-surface-50, #F4F5F7);
+  color: var(--p-surface-900, #1A1F2E);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.app-dark body,
+html.app-dark body {
+  background: #0F1419;
+  color: #E5E7EB;
+}
+
+/* Scrollbar mas discreto, se ve mejor en un dashboard oscuro */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.4);
+  border-radius: 4px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
