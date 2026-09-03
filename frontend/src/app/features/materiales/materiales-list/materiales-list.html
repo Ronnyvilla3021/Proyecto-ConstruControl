@@ -1,1 +1,53 @@
-<p>materiales-list works!</p>
+<div class="materiales-container">
+  <div class="header">
+    <h1>Materiales</h1>
+    <button (click)="toggleFormulario()">
+      {{ mostrarFormulario() ? 'Cancelar' : 'Nuevo Material' }}
+    </button>
+  </div>
+
+  @if (errorMensaje()) {
+    <div class="error-general">{{ errorMensaje() }}</div>
+  }
+
+  @if (mostrarFormulario()) {
+    <form [formGroup]="form" (ngSubmit)="crearMaterial()" class="form-crear">
+      <input formControlName="nombre" placeholder="Nombre del material" />
+      <input formControlName="unidad" placeholder="Unidad (kg, saco, m3...)" />
+      <input formControlName="stockMinimo" type="number" placeholder="Stock mínimo" />
+      <input formControlName="precioUnitario" type="number" placeholder="Precio unitario" />
+      <button type="submit">Guardar</button>
+    </form>
+  }
+
+  @if (cargando()) {
+    <p>Cargando...</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Stock</th>
+          <th>Mínimo</th>
+          <th>Unidad</th>
+          <th>Precio</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (material of materiales(); track material.id) {
+          <tr [class.stock-bajo]="material.stockBajo">
+            <td>{{ material.nombre }}</td>
+            <td>{{ material.stock }}</td>
+            <td>{{ material.stockMinimo }}</td>
+            <td>{{ material.unidad }}</td>
+            <td>{{ material.precioUnitario | number:'1.2-2' }}</td>
+            <td>{{ material.stockBajo ? 'Stock bajo' : 'OK' }}</td>
+            <td><button (click)="eliminarMaterial(material.id)">Eliminar</button></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
