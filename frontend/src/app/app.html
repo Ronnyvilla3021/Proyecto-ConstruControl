@@ -1,15 +1,63 @@
 @if (authService.estaAutenticado()) {
-  <nav>
-    <a routerLink="/obras" routerLinkActive="active">Obras</a>
-    <a routerLink="/materiales" routerLinkActive="active">Materiales</a>
-    <a routerLink="/compras" routerLinkActive="active">Compras</a>
-    <a routerLink="/consumo" routerLinkActive="active">Consumo</a>
-    <a routerLink="/personal" routerLinkActive="active">Personal</a>
-    <span class="usuario">{{ authService.usuario()?.nombreCompleto }} ({{ authService.rol() }})</span>
-    <button (click)="logout()">Cerrar sesión</button>
-  </nav>
-}
+  <div class="app-shell" [class.sidebar-open]="sidebarAbierto()">
 
-<main>
+    <!-- Overlay para cerrar sidebar en movil al tocar fuera -->
+    @if (sidebarAbierto()) {
+      <div class="overlay" (click)="cerrarSidebar()"></div>
+    }
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="pi pi-building"></i>
+          <div>
+            <strong>ConstruControl</strong>
+            <span>Control total de tu obra</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        @for (item of menu; track item.ruta) {
+          <a [routerLink]="item.ruta" routerLinkActive="active" (click)="cerrarSidebar()">
+            <i [class]="item.icon" [style.color]="item.color"></i>
+            <span>{{ item.label }}</span>
+          </a>
+        }
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="usuario-info">
+          <p-avatar icon="pi pi-user" shape="circle" [style]="{ 'background-color': 'var(--cc-accent-materiales)', color: '#fff' }"></p-avatar>
+          <div>
+            <strong>{{ authService.usuario()?.nombreCompleto }}</strong>
+            <span>{{ authService.rol() }}</span>
+          </div>
+        </div>
+
+        <div class="theme-toggle">
+          <i class="pi" [class.pi-moon]="themeService.modoOscuro()" [class.pi-sun]="!themeService.modoOscuro()"></i>
+          <p-toggleswitch [ngModel]="themeService.modoOscuro()" (ngModelChange)="themeService.toggle()"></p-toggleswitch>
+        </div>
+
+        <button pButton type="button" icon="pi pi-sign-out" label="Cerrar sesión" class="p-button-text p-button-sm" (click)="logout()"></button>
+      </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main-area">
+      <header class="topbar">
+        <button pButton type="button" icon="pi pi-bars" class="p-button-text menu-toggle" (click)="toggleSidebar()"></button>
+        <h1 class="page-title">ConstruControl</h1>
+        <div class="topbar-spacer"></div>
+      </header>
+
+      <main class="content">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+  </div>
+} @else {
   <router-outlet></router-outlet>
-</main>
+}
