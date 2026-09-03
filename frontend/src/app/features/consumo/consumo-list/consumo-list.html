@@ -6,21 +6,28 @@
   }
 
   <form [formGroup]="form" (ngSubmit)="registrarConsumo()" class="form-crear">
-    <select formControlName="obraId">
-      <option value="">Seleccione obra</option>
-      @for (obra of obras(); track obra.id) {
-        <option [value]="obra.id">{{ obra.nombre }}</option>
-      }
-    </select>
+    <label>Obra
+      <select formControlName="obraId">
+        <option value="">Seleccione obra</option>
+        @for (obra of obras(); track obra.id) {
+          <option [value]="obra.id">{{ obra.nombre }}</option>
+        }
+      </select>
+    </label>
 
-    <select formControlName="materialId">
-      <option value="">Seleccione material</option>
-      @for (material of materiales(); track material.id) {
-        <option [value]="material.id">{{ material.nombre }} (stock: {{ material.stock }})</option>
-      }
-    </select>
+    <label>Material
+      <select formControlName="materialId">
+        <option value="">Seleccione material</option>
+        @for (material of materiales(); track material.id) {
+          <option [value]="material.id">{{ material.nombre }} (stock disponible: {{ material.stock }})</option>
+        }
+      </select>
+    </label>
 
-    <input formControlName="cantidad" type="number" placeholder="Cantidad" />
+    <label>Cantidad a consumir
+      <input formControlName="cantidad" type="number" />
+    </label>
+
     <button type="submit">Registrar consumo</button>
   </form>
 

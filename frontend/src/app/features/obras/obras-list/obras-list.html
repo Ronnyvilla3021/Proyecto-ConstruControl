@@ -12,10 +12,18 @@
 
   @if (mostrarFormulario()) {
     <form [formGroup]="form" (ngSubmit)="crearObra()" class="form-crear">
-      <input formControlName="nombre" placeholder="Nombre de la obra" />
-      <input formControlName="ubicacion" placeholder="Ubicación" />
-      <input formControlName="presupuesto" type="number" placeholder="Presupuesto" />
-      <input formControlName="fechaInicio" type="date" />
+      <label>Nombre de la obra
+        <input formControlName="nombre" placeholder="Ej: Edificio Los Álamos" />
+      </label>
+      <label>Ubicación
+        <input formControlName="ubicacion" placeholder="Dirección" />
+      </label>
+      <label>Presupuesto (USD)
+        <input formControlName="presupuesto" type="number" />
+      </label>
+      <label>Fecha de inicio
+        <input formControlName="fechaInicio" type="date" />
+      </label>
       <button type="submit">Guardar</button>
     </form>
   }
@@ -42,7 +50,9 @@
             <td>{{ obra.estado }}</td>
             <td>
               @for (estado of transicionesPermitidas[obra.estado]; track estado) {
-                <button (click)="cambiarEstado(obra, estado)">→ {{ estado }}</button>
+                <button (click)="cambiarEstado(obra, estado)" [title]="'Cambiar estado a ' + estado">
+                  → {{ estado }}
+                </button>
               }
               <button (click)="eliminarObra(obra.id)">Eliminar</button>
             </td>

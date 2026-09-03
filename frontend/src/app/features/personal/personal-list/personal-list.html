@@ -15,9 +15,15 @@
 
     @if (mostrarFormEmpleado()) {
       <form [formGroup]="formEmpleado" (ngSubmit)="crearEmpleado()" class="form-crear">
-        <input formControlName="nombre" placeholder="Nombre completo" />
-        <input formControlName="cargo" placeholder="Cargo" />
-        <input formControlName="fechaIngreso" type="date" />
+        <label>Nombre completo
+          <input formControlName="nombre" placeholder="Ej: Jose Ramirez" />
+        </label>
+        <label>Cargo
+          <input formControlName="cargo" placeholder="Ej: Maestro Albañil" />
+        </label>
+        <label>Fecha de ingreso
+          <input formControlName="fechaIngreso" type="date" />
+        </label>
         <button type="submit">Guardar</button>
       </form>
     }
@@ -49,24 +55,28 @@
   </section>
 
   <section>
-    <h2>Asistencias</h2>
+    <h2>Asistencias (entrada / salida diaria)</h2>
 
     <form [formGroup]="formEntrada" (ngSubmit)="registrarEntrada()" class="form-crear">
-      <select formControlName="empleadoId">
-        <option value="">Seleccione empleado</option>
-        @for (empleado of empleados(); track empleado.id) {
-          <option [value]="empleado.id">{{ empleado.nombre }}</option>
-        }
-      </select>
+      <label>Empleado
+        <select formControlName="empleadoId">
+          <option value="">Seleccione empleado</option>
+          @for (empleado of empleados(); track empleado.id) {
+            <option [value]="empleado.id">{{ empleado.nombre }}</option>
+          }
+        </select>
+      </label>
 
-      <select formControlName="obraId">
-        <option value="">Seleccione obra</option>
-        @for (obra of obras(); track obra.id) {
-          <option [value]="obra.id">{{ obra.nombre }}</option>
-        }
-      </select>
+      <label>Obra
+        <select formControlName="obraId">
+          <option value="">Seleccione obra</option>
+          @for (obra of obras(); track obra.id) {
+            <option [value]="obra.id">{{ obra.nombre }}</option>
+          }
+        </select>
+      </label>
 
-      <button type="submit">Registrar entrada</button>
+      <button type="submit">Registrar entrada (marca la hora actual)</button>
     </form>
 
     <table>
@@ -75,8 +85,8 @@
           <th>Empleado</th>
           <th>Obra</th>
           <th>Fecha</th>
-          <th>Entrada</th>
-          <th>Salida</th>
+          <th>Hora entrada</th>
+          <th>Hora salida</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -87,10 +97,10 @@
             <td>{{ asistencia.obraNombre }}</td>
             <td>{{ asistencia.fecha }}</td>
             <td>{{ asistencia.horaEntrada?.substring(0,8) }}</td>
-            <td>{{ asistencia.horaSalida ? asistencia.horaSalida.substring(0,8) : '-' }}</td>
+            <td>{{ asistencia.horaSalida ? asistencia.horaSalida.substring(0,8) : 'Aún no registrada' }}</td>
             <td>
               @if (!asistencia.horaSalida) {
-                <button (click)="registrarSalida(asistencia.id)">Registrar salida</button>
+                <button (click)="registrarSalida(asistencia.id)">Registrar salida (marca la hora actual)</button>
               }
             </td>
           </tr>

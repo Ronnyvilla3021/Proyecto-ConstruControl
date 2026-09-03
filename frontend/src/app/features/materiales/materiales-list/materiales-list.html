@@ -12,10 +12,18 @@
 
   @if (mostrarFormulario()) {
     <form [formGroup]="form" (ngSubmit)="crearMaterial()" class="form-crear">
-      <input formControlName="nombre" placeholder="Nombre del material" />
-      <input formControlName="unidad" placeholder="Unidad (kg, saco, m3...)" />
-      <input formControlName="stockMinimo" type="number" placeholder="Stock mínimo" />
-      <input formControlName="precioUnitario" type="number" placeholder="Precio unitario" />
+      <label>Nombre del material
+        <input formControlName="nombre" placeholder="Ej: Cemento Portland" />
+      </label>
+      <label>Unidad de medida
+        <input formControlName="unidad" placeholder="kg, saco, m3..." />
+      </label>
+      <label>Stock mínimo (umbral de alerta)
+        <input formControlName="stockMinimo" type="number" />
+      </label>
+      <label>Precio unitario (USD)
+        <input formControlName="precioUnitario" type="number" />
+      </label>
       <button type="submit">Guardar</button>
     </form>
   }
@@ -27,8 +35,8 @@
       <thead>
         <tr>
           <th>Nombre</th>
-          <th>Stock</th>
-          <th>Mínimo</th>
+          <th>Stock actual</th>
+          <th>Stock mínimo</th>
           <th>Unidad</th>
           <th>Precio</th>
           <th>Estado</th>
