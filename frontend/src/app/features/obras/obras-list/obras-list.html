@@ -1,64 +1,102 @@
-<div class="obras-container">
-  <div class="header">
-    <h1>Obras</h1>
-    <button (click)="toggleFormulario()">
-      {{ mostrarFormulario() ? 'Cancelar' : 'Nueva Obra' }}
-    </button>
+<div class="page-header">
+  <div>
+    <h1><i class="pi pi-building"></i> Obras</h1>
+    <p>Gestiona los proyectos de construcción activos</p>
   </div>
-
-  @if (errorMensaje()) {
-    <div class="error-general">{{ errorMensaje() }}</div>
-  }
-
-  @if (mostrarFormulario()) {
-    <form [formGroup]="form" (ngSubmit)="crearObra()" class="form-crear">
-      <label>Nombre de la obra
-        <input formControlName="nombre" placeholder="Ej: Edificio Los Álamos" />
-      </label>
-      <label>Ubicación
-        <input formControlName="ubicacion" placeholder="Dirección" />
-      </label>
-      <label>Presupuesto (USD)
-        <input formControlName="presupuesto" type="number" />
-      </label>
-      <label>Fecha de inicio
-        <input formControlName="fechaInicio" type="date" />
-      </label>
-      <button type="submit">Guardar</button>
-    </form>
-  }
-
-  @if (cargando()) {
-    <p>Cargando...</p>
-  } @else {
-    <table>
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Ubicación</th>
-          <th>Presupuesto</th>
-          <th>Estado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (obra of obras(); track obra.id) {
-          <tr>
-            <td><a [routerLink]="['/dashboard', obra.id]">{{ obra.nombre }}</a></td>
-            <td>{{ obra.ubicacion }}</td>
-            <td>{{ obra.presupuesto | number:'1.2-2' }}</td>
-            <td>{{ obra.estado }}</td>
-            <td>
-              @for (estado of transicionesPermitidas[obra.estado]; track estado) {
-                <button (click)="cambiarEstado(obra, estado)" [title]="'Cambiar estado a ' + estado">
-                  → {{ estado }}
-                </button>
-              }
-              <button (click)="eliminarObra(obra.id)">Eliminar</button>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  }
+  <button pButton icon="pi pi-plus" label="Nueva Obra" (click)="abrirDialogo()"></button>
 </div>
+
+@if (errorMensaje()) {
+  <div class="alerta-error"><i class="pi pi-exclamation-triangle"></i> {{ errorMensaje() }}</div>
+}
+
+<!-- STAT CARDS -->
+<div class="stats-grid">
+  <p-card styleClass="stat-card stat-blue">
+    <div class="stat-content">
+      <div class="stat-icon"><i class="pi pi-building"></i></div>
+      <div>
+        <span class="stat-label">Total de obras</span>
+        <span class="stat-value">{{ totalObras() }}</span>
+      </div>
+    </div>
+  </p-card>
+
+  <p-card styleClass="stat-card stat-green">
+    <div class="stat-content">
+      <div class="stat-icon"><i class="pi pi-check-circle"></i></div>
+      <div>
+        <span class="stat-label">Obras activas</span>
+        <span class="stat-value">{{ obrasActivas() }}</span>
+      </div>
+    </div>
+  </p-card>
+
+  <p-card styleClass="stat-card stat-amber">
+    <div class="stat-content">
+      <div class="stat-icon"><i class="pi pi-wallet"></i></div>
+      <div>
+        <span class="stat-label">Presupuesto total</span>
+        <span class="stat-value">{{ presupuestoTotal() | number:'1.0-0' }}</span>
+      </div>
+    </div>
+  </p-card>
+</div>
+
+<!-- TABLA -->
+<p-card styleClass="table-card">
+  <p-table [value]="obras()" [loading]="cargando()" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nombre</th>
+        <th>Ubicación</th>
+        <th>Presupuesto</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-obra>
+      <tr>
+        <td>
+          <a [routerLink]="['/dashboard', obra.id]" class="link-nombre">
+            <i class="pi pi-arrow-up-right"></i> {{ obra.nombre }}
+          </a>
+        </td>
+        <td>{{ obra.ubicacion }}</td>
+        <td>{{ obra.presupuesto | number:'1.2-2' }}</td>
+        <td><p-tag [value]="obra.estado" [severity]="severityEstado(obra.estado)"></p-tag></td>
+        <td class="acciones">
+          @for (estado of obtenerTransiciones(obra); track estado) {
+            <button pButton size="small" [outlined]="true" (click)="cambiarEstado(obra, estado)">{{ estado }}</button>
+          }
+          <button pButton size="small" severity="danger" [outlined]="true" icon="pi pi-trash" (click)="eliminarObra(obra.id)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="5" class="vacio">No hay obras registradas todavía.</td></tr>
+    </ng-template>
+  </p-table>
+</p-card>
+
+<!-- DIALOGO NUEVA OBRA -->
+<p-dialog header="Nueva Obra" [(visible)]="mostrarDialogo" [modal]="true" [style]="{ width: '450px' }" [breakpoints]="{ '640px': '95vw' }">
+  <form [formGroup]="form" (ngSubmit)="crearObra()" class="form-dialogo">
+    <label>Nombre de la obra
+      <input pInputText formControlName="nombre" placeholder="Ej: Edificio Los Álamos" />
+    </label>
+    <label>Ubicación
+      <input pInputText formControlName="ubicacion" placeholder="Dirección" />
+    </label>
+    <label>Presupuesto (USD)
+      <p-inputnumber formControlName="presupuesto" mode="decimal" [minFractionDigits]="2" [min]="0"></p-inputnumber>
+    </label>
+    <label>Fecha de inicio
+      <p-datepicker formControlName="fechaInicio" dateFormat="yy-mm-dd" [showIcon]="true"></p-datepicker>
+    </label>
+    <div class="form-acciones">
+      <button pButton type="button" label="Cancelar" [text]="true" (click)="mostrarDialogo.set(false)"></button>
+      <button pButton type="submit" label="Guardar" icon="pi pi-check"></button>
+    </div>
+  </form>
+</p-dialog>

@@ -56,3 +56,34 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+/* ============ Tarjetas de estadisticas (reutilizable) ============ */
+.stat-card .p-card-body,
+.table-card .p-card-body {
+  padding: 20px;
+}
+
+.stat-card {
+  border-radius: var(--cc-radius) !important;
+  border: 1px solid var(--p-surface-200, rgba(0,0,0,0.06));
+}
+
+.app-dark .stat-card,
+.app-dark .table-card {
+  background: #161B26 !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.table-card {
+  border-radius: var(--cc-radius) !important;
+  border: 1px solid var(--p-surface-200, rgba(0,0,0,0.06));
+}
+
+.table-card .p-card-body {
+  padding: 0;
+}
+
+.table-card .p-datatable {
+  border-radius: var(--cc-radius);
+  overflow: hidden;
+}
