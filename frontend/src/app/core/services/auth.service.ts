@@ -47,10 +47,31 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem(TOKEN_KEY);
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token && this.tokenExpirado(token)) {
+      this.logout();
+      return null;
+    }
+    return token;
+  }
+
+  private tokenExpirado(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expiraEn = payload.exp * 1000; // exp viene en segundos, Date.now() en ms
+      return Date.now() >= expiraEn;
+    } catch {
+      return true; // si no se puede leer el token, lo tratamos como invalido
+    }
   }
 
   private cargarUsuarioGuardado(): UsuarioActual | null {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token && this.tokenExpirado(token)) {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      return null;
+    }
     const raw = localStorage.getItem(USER_KEY);
     return raw ? JSON.parse(raw) : null;
   }

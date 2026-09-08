@@ -3,7 +3,7 @@
     <h1><i class="pi pi-building"></i> Obras</h1>
     <p>Gestiona los proyectos de construcción activos</p>
   </div>
-  <button pButton icon="pi pi-plus" label="Nueva Obra" (click)="abrirDialogo()"></button>
+  <button pButton icon="pi pi-plus" (click)="abrirDialogo()">Nueva Obra</button>
 </div>
 
 @if (errorMensaje()) {
@@ -95,8 +95,8 @@
       <p-datepicker formControlName="fechaInicio" dateFormat="yy-mm-dd" [showIcon]="true"></p-datepicker>
     </label>
     <div class="form-acciones">
-      <button pButton type="button" label="Cancelar" [text]="true" (click)="mostrarDialogo.set(false)"></button>
-      <button pButton type="submit" label="Guardar" icon="pi pi-check"></button>
+      <button pButton type="button" [text]="true" (click)="mostrarDialogo.set(false)">Cancelar</button>
+      <button pButton type="submit" icon="pi pi-check">Guardar</button>
     </div>
   </form>
 </p-dialog>
