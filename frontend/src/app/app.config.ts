@@ -21,6 +21,24 @@ const ConstruControlPreset = definePreset(Aura, {
       800: '{amber.800}',
       900: '{amber.900}',
       950: '{amber.950}'
+    },
+    colorScheme: {
+      dark: {
+        surface: {
+          0: '#ffffff',
+          50: '#F4F5F7',
+          100: '#E5E7EB',
+          200: '#374151',
+          300: '#2A3140',
+          400: '#232937',
+          500: '#1A1F2E',
+          600: '#161B26',
+          700: '#12161F',
+          800: '#0F1419',
+          900: '#0B0E13',
+          950: '#07090C'
+        }
+      }
     }
   }
 });
@@ -34,7 +52,8 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: ConstruControlPreset,
         options: {
-          darkModeSelector: '.app-dark'
+          darkModeSelector: '.app-dark',
+          cssLayer: false
         }
       },
       ripple: true

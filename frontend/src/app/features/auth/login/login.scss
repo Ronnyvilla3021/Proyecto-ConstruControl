@@ -1,0 +1,135 @@
+.login-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: url('/images/login-bg.jpg') center center / cover no-repeat;
+  padding: 20px;
+}
+
+.login-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(240, 244, 248, 0.55);
+}
+
+.login-card {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 430px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.login-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+
+  img {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  h1 {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: #12213C;
+    margin: 0;
+  }
+}
+
+.login-subtitle {
+  color: #6B7280;
+  margin: 0 0 28px 0;
+  font-size: 0.95rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  .p-input-icon-left {
+    position: relative;
+    width: 100%;
+
+    i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9CA3AF;
+      z-index: 1;
+    }
+
+    input {
+      width: 100%;
+      padding-left: 42px;
+    }
+  }
+}
+
+.password-full {
+  width: 100%;
+
+  :deep(input) {
+    width: 100%;
+  }
+}
+
+.error {
+  color: #EF4444;
+  font-size: 0.8rem;
+}
+
+.error-general {
+  background: rgba(239, 68, 68, 0.08);
+  color: #EF4444;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+}
+
+.campo-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: #4B5563;
+}
+
+.btn-ingresar {
+  width: 100%;
+  justify-content: center;
+  padding: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  background: #1E3A8A;
+  border-color: #1E3A8A;
+}
+
+.login-footer {
+  position: absolute;
+  bottom: 20px;
+  right: 24px;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.8rem;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}

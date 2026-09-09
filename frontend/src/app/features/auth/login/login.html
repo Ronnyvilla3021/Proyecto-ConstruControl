@@ -1,32 +1,44 @@
-<div class="login-container">
+<div class="login-page">
   <div class="login-card">
-    <h1>ConstruControl</h1>
-    <p class="subtitle">Inicia sesión para continuar</p>
+    <div class="login-logo">
+      <img src="/images/logo.png" alt="ConstruControl" />
+      <h1>ConstruControl</h1>
+    </div>
+
+    <p class="login-subtitle">Inicia sesión para continuar</p>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="campo">
-        <label for="email">Email</label>
-        <input id="email" type="email" formControlName="email" placeholder="admin@construcontrol.com" />
+        <span class="p-input-icon-left">
+          <i class="pi pi-envelope"></i>
+          <input pInputText id="email" type="email" formControlName="email" placeholder="admin@construcontrol.com" />
+        </span>
         @if (form.get('email')?.invalid && form.get('email')?.touched) {
           <span class="error">Ingrese un email válido.</span>
         }
       </div>
 
       <div class="campo">
-        <label for="password">Contraseña</label>
-        <input id="password" type="password" formControlName="password" placeholder="••••••••" />
+        <p-password formControlName="password" placeholder="••••••••" [feedback]="false" [toggleMask]="true" styleClass="password-full"></p-password>
         @if (form.get('password')?.invalid && form.get('password')?.touched) {
           <span class="error">La contraseña es obligatoria.</span>
         }
+      </div>
+
+      <div class="campo-checkbox">
+        <p-checkbox formControlName="recordarme" [binary]="true" inputId="recordarme"></p-checkbox>
+        <label for="recordarme">Recordarme</label>
       </div>
 
       @if (errorMensaje()) {
         <div class="error-general">{{ errorMensaje() }}</div>
       }
 
-      <button type="submit" [disabled]="cargando()">
+      <button pButton type="submit" [disabled]="cargando()" class="btn-ingresar">
         {{ cargando() ? 'Ingresando...' : 'Ingresar' }}
       </button>
     </form>
   </div>
+
+  <div class="login-footer">© 2026 ConstruControl Technologies</div>
 </div>
