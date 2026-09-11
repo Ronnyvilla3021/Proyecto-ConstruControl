@@ -45,15 +45,20 @@ builder.Services.AddHostedService<AutomationEngine>();
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<ConstruControl.Application.Interfaces.IRealtimeNotifier, ConstruControl.API.Realtime.SignalRRealtimeNotifier>();
 
-// CORS - necesario para que Angular (localhost:4200) pueda conectarse
-// tanto a la API REST como al hub de SignalR. AllowCredentials es
-// obligatorio para SignalR, por eso no se puede usar "AllowAnyOrigin".
+// CORS - lee origenes permitidos desde configuracion (appsettings o variable
+// de entorno "AllowedOrigins", separados por coma). Asi el mismo codigo
+// funciona en local (localhost:4200) y en produccion (dominio de Vercel)
+// sin tocar el codigo, solo configurando la variable en Render.
 const string CorsPolicyFrontend = "FrontendPolicy";
+var allowedOrigins = builder.Configuration["AllowedOrigins"]?
+    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+    ?? new[] { "http://localhost:4200" };
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(CorsPolicyFrontend, policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -83,8 +88,6 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
     };
 
-    // SignalR envia el token por query string (no por header Authorization),
-    // asi que hay que leerlo de ahi cuando la conexion es al hub.
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
@@ -109,9 +112,9 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
 app.UseCors(CorsPolicyFrontend);
 app.UseAuthentication();
 app.UseAuthorization();
