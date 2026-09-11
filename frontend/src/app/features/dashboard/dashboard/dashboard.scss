@@ -1,0 +1,372 @@
+/* ==========================================
+   ConstruControl — Dashboard por Obra (detalle)
+   Acento: azul obra (#3B82F6)
+   Incluye widgets, tabla y eventos en vivo (SignalR)
+   Soporta: modo claro y modo oscuro (.app-dark)
+   ========================================== */
+
+:host {
+  display: block;
+
+  --db-surface: #FFFFFF;
+  --db-surface-2: #F8FAFC;
+  --db-border: rgba(15, 23, 42, 0.08);
+  --db-border-strong: rgba(15, 23, 42, 0.14);
+
+  --db-text: #0F172A;
+  --db-text-muted: #64748B;
+
+  --db-accent: #3B82F6;
+  --db-accent-deep: #1E3A8A;
+  --db-accent-soft: #60A5FA;
+  --db-accent-glow: rgba(59, 130, 246, 0.30);
+
+  --db-live: #10B981;
+  --db-live-glow: rgba(16, 185, 129, 0.45);
+
+  --db-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --db-shadow-md: 0 6px 18px rgba(15, 23, 42, 0.08);
+  --db-shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.12);
+}
+
+/* ==========================================
+   Contenedor
+   ========================================== */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  h1 {
+    margin: 0;
+    font-size: 1.55rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--db-text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 26px;
+      border-radius: 3px;
+      background: linear-gradient(180deg, var(--db-accent-deep), var(--db-accent), var(--db-accent-soft));
+      box-shadow: 0 0 12px var(--db-accent-glow);
+    }
+  }
+
+  h2 {
+    margin: 8px 0 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--db-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 15px;
+      border-radius: 2px;
+      background: var(--db-accent);
+    }
+  }
+
+  p {
+    color: var(--db-text-muted);
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+/* ==========================================
+   Error general
+   ========================================== */
+.error-general {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #B91C1C;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.22);
+
+  &::before {
+    content: '\e922';
+    font-family: 'primeicons';
+    font-size: 1rem;
+    line-height: 1;
+    color: #EF4444;
+  }
+}
+
+/* ==========================================
+   Widgets (KPIs del dashboard de obra)
+   ========================================== */
+.widgets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.widget {
+  position: relative;
+  padding: 20px;
+  border-radius: var(--cc-radius);
+  background: var(--db-surface);
+  border: 1px solid var(--db-border);
+  box-shadow: var(--db-shadow-sm);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+
+  /* Barra superior de acento */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--db-accent-deep), var(--db-accent), var(--db-accent-soft));
+    opacity: 0.9;
+  }
+
+  /* Halo radial sutil arriba a la derecha */
+  &::after {
+    content: '';
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--db-accent-glow) 0%, transparent 65%);
+    opacity: 0.35;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  h3 {
+    margin: 0 0 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--db-text-muted);
+    position: relative;
+    z-index: 1;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--db-text);
+    line-height: 1.1;
+    position: relative;
+    z-index: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--db-shadow-md);
+    border-color: var(--db-accent-glow);
+
+    &::after { opacity: 0.7; }
+  }
+}
+
+/* ==========================================
+   Tabla de materiales críticos
+   ========================================== */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--cc-radius);
+  overflow: hidden;
+  background: var(--db-surface);
+  border: 1px solid var(--db-border);
+  box-shadow: var(--db-shadow-sm);
+
+  thead {
+    background: var(--db-surface-2);
+
+    th {
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--db-text-muted);
+      border-bottom: 1px solid var(--db-border);
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background 0.15s ease;
+
+      &:not(:last-child) td {
+        border-bottom: 1px solid var(--db-border);
+      }
+
+      &:hover {
+        background: var(--db-surface-2);
+      }
+    }
+
+    td {
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      color: var(--db-text);
+      font-variant-numeric: tabular-nums;
+
+      &:first-child {
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+/* ==========================================
+   Eventos en vivo (SignalR)
+   ========================================== */
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  li {
+    position: relative;
+    padding: 12px 16px 12px 40px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    color: var(--db-text);
+    background: var(--db-surface);
+    border: 1px solid var(--db-border);
+    box-shadow: var(--db-shadow-sm);
+    font-variant-numeric: tabular-nums;
+    animation: live-in 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 0.15s ease, border-color 0.2s ease;
+
+    /* Punto "en vivo" pulsante */
+    &::before {
+      content: '';
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--db-live);
+      box-shadow: 0 0 0 0 var(--db-live-glow);
+      animation: live-pulse 1.8s infinite;
+    }
+
+    &:hover {
+      transform: translateX(2px);
+      border-color: var(--db-accent-glow);
+    }
+  }
+}
+
+@keyframes live-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes live-pulse {
+  0%   { box-shadow: 0 0 0 0 var(--db-live-glow); }
+  70%  { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* ==========================================
+   MODO OSCURO
+   ========================================== */
+:host-context(.app-dark) {
+  --db-surface: #161B26;
+  --db-surface-2: #1C2230;
+  --db-border: rgba(255, 255, 255, 0.06);
+  --db-border-strong: rgba(255, 255, 255, 0.12);
+
+  --db-text: #E5E7EB;
+  --db-text-muted: #94A3B8;
+
+  --db-accent: #60A5FA;
+  --db-accent-deep: #3B82F6;
+  --db-accent-soft: #93C5FD;
+  --db-accent-glow: rgba(96, 165, 250, 0.35);
+
+  --db-live: #34D399;
+  --db-live-glow: rgba(52, 211, 153, 0.55);
+
+  --db-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --db-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --db-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
+
+:host-context(.app-dark) .dashboard-container h1::before {
+  box-shadow: 0 0 16px var(--db-accent-glow);
+}
+
+:host-context(.app-dark) .widget {
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(96, 165, 250, 0.08) 0%, transparent 60%),
+    var(--db-surface);
+}
+
+:host-context(.app-dark) .widget:hover {
+  box-shadow: var(--db-shadow-md), 0 0 0 1px var(--db-accent-glow);
+}
+
+:host-context(.app-dark) table thead {
+  background: #1A2030;
+}
+
+:host-context(.app-dark) ul li:hover {
+  border-color: var(--db-accent-glow);
+  box-shadow: var(--db-shadow-md), 0 0 0 1px var(--db-accent-glow);
+}
+
+:host-context(.app-dark) .error-general {
+  color: #FCA5A5;
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(248, 113, 113, 0.35);
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 768px) {
+  .dashboard-container h1 { font-size: 1.3rem; }
+  .widget p { font-size: 1.35rem; }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ul li,
+  ul li::before { animation: none; }
+  .widget,
+  ul li { transition: none; }
+}

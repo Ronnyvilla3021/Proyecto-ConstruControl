@@ -47,7 +47,7 @@ export class Login {
     }).subscribe({
       next: () => {
         this.cargando.set(false);
-        this.router.navigate(['/obras']);
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         this.cargando.set(false);

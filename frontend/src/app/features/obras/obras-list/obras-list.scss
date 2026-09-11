@@ -1,3 +1,33 @@
+/* ==========================================
+   ConstruControl — Obras / Lista
+   Acento: azul obras (#3B82F6)
+   Soporta: modo claro y modo oscuro (.app-dark)
+   ========================================== */
+
+:host {
+  display: block;
+
+  --ob-surface: #FFFFFF;
+  --ob-surface-2: #F8FAFC;
+  --ob-border: rgba(15, 23, 42, 0.08);
+  --ob-border-strong: rgba(15, 23, 42, 0.14);
+
+  --ob-text: #0F172A;
+  --ob-text-muted: #64748B;
+
+  --ob-accent: #3B82F6;
+  --ob-accent-deep: #1E3A8A;
+  --ob-accent-soft: #60A5FA;
+  --ob-accent-glow: rgba(59, 130, 246, 0.28);
+
+  --ob-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --ob-shadow-md: 0 6px 18px rgba(15, 23, 42, 0.08);
+  --ob-shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.12);
+}
+
+/* ==========================================
+   Encabezado
+   ========================================== */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -10,31 +40,78 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 1.5rem;
-    margin: 0 0 4px 0;
+    font-size: 1.55rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+    color: var(--ob-text);
 
-    i { color: var(--cc-accent-obras); }
+    i {
+      color: var(--ob-accent);
+      font-size: 1.35rem;
+      filter: drop-shadow(0 2px 6px var(--ob-accent-glow));
+    }
   }
 
   p {
     margin: 0;
-    color: var(--p-surface-500, #6B7280);
+    color: var(--ob-text-muted);
     font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  /* Botón "Nueva Obra" (pButton sin clase específica) */
+  :host ::ng-deep .p-button {
+    border-radius: 12px;
+    font-weight: 700;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, #1E3A8A 0%, #2E4FB8 55%, #3B82F6 100%);
+    border: 1px solid #1E3A8A;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.15) inset,
+      0 8px 20px rgba(30, 58, 138, 0.30);
+    transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+
+    &:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.2) inset,
+        0 12px 28px rgba(30, 58, 138, 0.40);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
   }
 }
 
+/* ==========================================
+   Alerta de error
+   ========================================== */
 .alerta-error {
-  background: rgba(239, 68, 68, 0.1);
-  color: #EF4444;
-  padding: 12px 16px;
-  border-radius: var(--cc-radius-sm);
-  margin-bottom: 20px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #B91C1C;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.22);
+
+  i {
+    color: #EF4444;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
 }
 
+/* ==========================================
+   Grid de estadísticas
+   ========================================== */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -42,61 +119,248 @@
   margin-bottom: 24px;
 }
 
+:host ::ng-deep .stat-card {
+  border-radius: var(--cc-radius) !important;
+  background: var(--ob-surface);
+  border: 1px solid var(--ob-border);
+  box-shadow: var(--ob-shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--ob-shadow-md);
+  }
+}
+
 .stat-content {
   display: flex;
   align-items: center;
   gap: 14px;
+  position: relative;
+  z-index: 1;
 }
 
 .stat-icon {
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   flex-shrink: 0;
+  transition: background 0.2s ease;
 }
 
 .stat-label {
   display: block;
-  font-size: 0.8rem;
-  color: var(--p-surface-500, #6B7280);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ob-text-muted);
+  margin-bottom: 2px;
 }
 
 .stat-value {
   display: block;
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ob-text);
+  line-height: 1.1;
 }
 
-.stat-blue .stat-icon { background: rgba(59, 130, 246, 0.15); color: #3B82F6; }
-.stat-green .stat-icon { background: rgba(16, 185, 129, 0.15); color: #10B981; }
-.stat-amber .stat-icon { background: rgba(245, 158, 11, 0.15); color: #F59E0B; }
+/* Barra lateral + tinte por tipo de stat */
+.stat-blue {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: linear-gradient(180deg, #3B82F6, #60A5FA);
+  }
+  .stat-icon { background: rgba(59, 130, 246, 0.12); color: #3B82F6; }
+  &:hover .stat-icon { background: rgba(59, 130, 246, 0.20); }
+}
 
+.stat-green {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: linear-gradient(180deg, #10B981, #34D399);
+  }
+  .stat-icon { background: rgba(16, 185, 129, 0.12); color: #10B981; }
+  &:hover .stat-icon { background: rgba(16, 185, 129, 0.20); }
+}
+
+.stat-amber {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: linear-gradient(180deg, #F59E0B, #FBBF24);
+  }
+  .stat-icon { background: rgba(245, 158, 11, 0.12); color: #F59E0B; }
+  &:hover .stat-icon { background: rgba(245, 158, 11, 0.20); }
+}
+
+/* ==========================================
+   Tabla
+   ========================================== */
+:host ::ng-deep .table-card {
+  border-radius: var(--cc-radius) !important;
+  background: var(--ob-surface);
+  border: 1px solid var(--ob-border);
+  box-shadow: var(--ob-shadow-sm);
+  overflow: hidden;
+
+  .p-card-body {
+    padding: 0;
+  }
+}
+
+:host ::ng-deep .p-datatable {
+  .p-datatable-header {
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+
+  .p-datatable-thead > tr > th {
+    background: var(--ob-surface-2);
+    color: var(--ob-text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--ob-border);
+    border-top: none;
+  }
+
+  .p-datatable-tbody > tr {
+    transition: background 0.15s ease;
+
+    > td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--ob-border);
+      color: var(--ob-text);
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
+
+    &:hover {
+      background: var(--ob-surface-2);
+    }
+
+    &:last-child > td {
+      border-bottom: none;
+    }
+  }
+
+  /* Loading overlay */
+  .p-datatable-loading-overlay {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(2px);
+  }
+}
+
+/* ==========================================
+   Link de nombre (ver dashboard de la obra)
+   ========================================== */
 .link-nombre {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--cc-accent-obras);
-  font-weight: 600;
+  color: var(--ob-accent);
+  font-weight: 700;
+  transition: gap 0.2s ease, color 0.2s ease;
 
-  i { font-size: 0.75rem; }
+  i {
+    font-size: 0.75rem;
+    transition: transform 0.2s ease;
+  }
 
-  &:hover { text-decoration: underline; }
+  &:hover {
+    color: var(--ob-accent-deep);
+    gap: 9px;
+
+    i {
+      transform: translate(1px, -1px);
+    }
+  }
 }
 
+/* ==========================================
+   Acciones (botones de transición y borrado)
+   ========================================== */
 .acciones {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
+
+  :host ::ng-deep .p-button {
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+
+  :host ::ng-deep .p-button:not(.p-button-danger):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(59, 130, 246, 0.20);
+  }
+
+  :host ::ng-deep .p-button.p-button-danger:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(239, 68, 68, 0.25);
+  }
 }
 
+/* ==========================================
+   Estado vacío
+   ========================================== */
 .vacio {
   text-align: center;
-  padding: 32px;
-  color: var(--p-surface-400, #9CA3AF);
+  padding: 40px 32px;
+  color: var(--ob-text-muted);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* ==========================================
+   Formulario del diálogo
+   ========================================== */
+:host ::ng-deep .p-dialog {
+  border-radius: var(--cc-radius);
+  overflow: hidden;
+  box-shadow: var(--ob-shadow-lg);
+
+  .p-dialog-header {
+    background: var(--ob-surface);
+    border-bottom: 1px solid var(--ob-border);
+    padding: 20px 24px;
+    font-weight: 700;
+    color: var(--ob-text);
+  }
+
+  .p-dialog-content {
+    background: var(--ob-surface);
+    padding: 24px;
+    color: var(--ob-text);
+  }
+
+  .p-dialog-header-icon {
+    color: var(--ob-text-muted);
+    &:hover { color: var(--ob-text); background: var(--ob-surface-2); }
+  }
 }
 
 .form-dialogo {
@@ -108,19 +372,193 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 600;
-    color: var(--p-surface-600, #4B5563);
+    color: var(--ob-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
   }
 
-  input, p-inputnumber, p-datepicker {
+  input,
+  p-inputnumber,
+  p-datepicker {
     width: 100%;
+  }
+
+  :host ::ng-deep input.p-inputtext,
+  :host ::ng-deep .p-inputnumber-input,
+  :host ::ng-deep .p-datepicker-input {
+    width: 100%;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--ob-surface-2);
+    border: 1px solid var(--ob-border);
+    color: var(--ob-text);
+    font-size: 0.92rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+
+    &::placeholder {
+      color: var(--ob-text-muted);
+      opacity: 0.7;
+    }
+
+    &:hover { border-color: var(--ob-border-strong); }
+
+    &:focus,
+    &:focus-visible {
+      outline: none;
+      background: var(--ob-surface);
+      border-color: var(--ob-accent);
+      box-shadow: 0 0 0 4px var(--ob-accent-glow);
+    }
   }
 }
 
 .form-acciones {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--ob-border);
+
+  :host ::ng-deep .p-button {
+    border-radius: 10px;
+    font-weight: 700;
+    padding: 10px 18px;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+  }
+
+  :host ::ng-deep .p-button:not(.p-button-text):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px var(--ob-accent-glow);
+  }
+}
+
+/* ==========================================
+   MODO OSCURO
+   ========================================== */
+:host-context(.app-dark) {
+  --ob-surface: #161B26;
+  --ob-surface-2: #1C2230;
+  --ob-border: rgba(255, 255, 255, 0.06);
+  --ob-border-strong: rgba(255, 255, 255, 0.14);
+
+  --ob-text: #E5E7EB;
+  --ob-text-muted: #94A3B8;
+
+  --ob-accent: #60A5FA;
+  --ob-accent-deep: #93C5FD;
+  --ob-accent-soft: #93C5FD;
+  --ob-accent-glow: rgba(96, 165, 250, 0.35);
+
+  --ob-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --ob-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --ob-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
+
+:host-context(.app-dark) .page-header h1 i {
+  filter: drop-shadow(0 0 10px var(--ob-accent-glow));
+}
+
+:host-context(.app-dark) ::ng-deep .stat-card,
+:host-context(.app-dark) ::ng-deep .table-card {
+  background: var(--ob-surface);
+  border-color: var(--ob-border);
+}
+
+:host-context(.app-dark) ::ng-deep .stat-card:hover {
+  border-color: var(--ob-accent-glow);
+  box-shadow: var(--ob-shadow-md), 0 0 0 1px var(--ob-accent-glow);
+}
+
+:host-context(.app-dark) .stat-blue .stat-icon {
+  background: rgba(96, 165, 250, 0.16);
+  color: #60A5FA;
+}
+:host-context(.app-dark) .stat-green .stat-icon {
+  background: rgba(52, 211, 153, 0.16);
+  color: #34D399;
+}
+:host-context(.app-dark) .stat-amber .stat-icon {
+  background: rgba(251, 191, 36, 0.16);
+  color: #FBBF24;
+}
+
+/* Tabla en dark */
+:host-context(.app-dark) ::ng-deep .p-datatable {
+  .p-datatable-thead > tr > th {
+    background: #1A2030;
+  }
+
+  .p-datatable-tbody > tr:hover {
+    background: rgba(96, 165, 250, 0.06);
+  }
+
+  .p-datatable-loading-overlay {
+    background: rgba(15, 20, 25, 0.7);
+  }
+}
+
+/* Link en dark */
+:host-context(.app-dark) .link-nombre {
+  color: #93C5FD;
+
+  &:hover { color: #BFDBFE; }
+}
+
+/* Diálogo en dark */
+:host-context(.app-dark) ::ng-deep .p-dialog {
+  background: var(--ob-surface);
+  border: 1px solid var(--ob-border-strong);
+
+  .p-dialog-header,
+  .p-dialog-content {
+    background: var(--ob-surface);
+    color: var(--ob-text);
+  }
+
+  .p-dialog-header {
+    border-bottom-color: var(--ob-border);
+  }
+}
+
+/* Inputs en dark */
+:host-context(.app-dark) .form-dialogo {
+  :host ::ng-deep input.p-inputtext,
+  :host ::ng-deep .p-inputnumber-input,
+  :host ::ng-deep .p-datepicker-input {
+    background: var(--ob-surface-2);
+    border-color: var(--ob-border);
+
+    &:focus,
+    &:focus-visible {
+      background: #1F2633;
+      border-color: var(--ob-accent);
+      box-shadow: 0 0 0 4px var(--ob-accent-glow), 0 0 18px rgba(96, 165, 250, 0.25);
+    }
+  }
+}
+
+/* Alerta error en dark */
+:host-context(.app-dark) .alerta-error {
+  color: #FCA5A5;
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(248, 113, 113, 0.35);
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 768px) {
+  .page-header h1 { font-size: 1.3rem; }
+  .stat-value { font-size: 1.35rem; }
+  .stat-icon { width: 44px; height: 44px; font-size: 1.15rem; }
+  .acciones { gap: 4px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host ::ng-deep .stat-card,
+  :host ::ng-deep .p-button,
+  .link-nombre { transition: none; }
 }

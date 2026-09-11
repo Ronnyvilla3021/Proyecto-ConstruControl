@@ -30,6 +30,7 @@ export class App {
   sidebarAbierto = signal(false);
 
   menu: ItemMenu[] = [
+    { label: 'Dashboard', icon: 'pi pi-chart-line', ruta: '/dashboard', color: 'var(--cc-accent-compras)' },
     { label: 'Obras', icon: 'pi pi-building', ruta: '/obras', color: 'var(--cc-accent-obras)' },
     { label: 'Materiales', icon: 'pi pi-box', ruta: '/materiales', color: 'var(--cc-accent-materiales)' },
     { label: 'Compras', icon: 'pi pi-shopping-cart', ruta: '/compras', color: 'var(--cc-accent-compras)' },

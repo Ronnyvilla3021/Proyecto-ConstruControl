@@ -1,0 +1,93 @@
+<div class="page-header">
+  <div>
+    <h1><i class="pi pi-chart-line"></i> Dashboard</h1>
+    <p>Resumen general de todas las obras y operaciones</p>
+  </div>
+</div>
+
+<div class="stats-grid">
+  <p-card styleClass="stat-card stat-blue">
+    <div class="stat-content">
+      <div class="stat-icon"><i class="pi pi-building"></i></div>
+      <div>
+        <span class="stat-label">Obras activas</span>
+        <span class="stat-value">{{ totalObrasActivas() }}</span>
+      </div>
+    </div>
+  </p-card>
+
+  <p-card styleClass="stat-card stat-green">
+    <div class="stat-content">
+      <div class="stat-icon"><i class="pi pi-wallet"></i></div>
+      <div>
+        <span class="stat-label">Presupuesto total</span>
+        <span class="stat-value">{{ presupuestoTotal() | number:'1.0-0' }}</span>
+      </div>
+    </div>
+  </p-card>
+
+  <p-card styleClass="stat-card stat-red">
+    <div class="stat-content">
+      <div class="stat-icon"><i class="pi pi-exclamation-triangle"></i></div>
+      <div>
+        <span class="stat-label">Materiales críticos</span>
+        <span class="stat-value">{{ materialesCriticos() }}</span>
+      </div>
+    </div>
+  </p-card>
+
+  <p-card styleClass="stat-card stat-amber">
+    <div class="stat-content">
+      <div class="stat-icon"><i class="pi pi-bell"></i></div>
+      <div>
+        <span class="stat-label">Alertas sin leer</span>
+        <span class="stat-value">{{ notificacionesSinLeer() }}</span>
+      </div>
+    </div>
+  </p-card>
+</div>
+
+<div class="dashboard-grid">
+  <div class="col-obras">
+    <h2>Tus obras</h2>
+    @if (cargando()) {
+      <p>Cargando...</p>
+    } @else if (obras().length === 0) {
+      <p-card styleClass="table-card"><p class="vacio">No hay obras registradas todavía.</p></p-card>
+    } @else {
+      <div class="obras-grid">
+        @for (obra of obras(); track obra.id) {
+          <p-card styleClass="obra-card">
+            <div class="obra-card-header">
+              <h3>{{ obra.nombre }}</h3>
+              <p-tag [value]="obra.estado" [severity]="severityEstado(obra.estado)"></p-tag>
+            </div>
+            <p class="obra-ubicacion"><i class="pi pi-map-marker"></i> {{ obra.ubicacion }}</p>
+            <p class="obra-presupuesto">Presupuesto: {{ obra.presupuesto | number:'1.0-0' }}</p>
+            <a [routerLink]="['/dashboard', obra.id]" class="ver-detalle">
+              Ver detalle <i class="pi pi-arrow-right"></i>
+            </a>
+          </p-card>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="col-notificaciones">
+    <h2>Alertas recientes</h2>
+    <p-card styleClass="table-card">
+      @if (notificaciones().length === 0) {
+        <p class="vacio">Sin alertas por ahora.</p>
+      } @else {
+        <ul class="lista-notificaciones">
+          @for (n of notificaciones(); track n.id) {
+            <li [class.no-leida]="!n.leida">
+              <i [class]="iconoNotificacion(n.tipo)"></i>
+              <span>{{ n.mensaje }}</span>
+            </li>
+          }
+        </ul>
+      }
+    </p-card>
+  </div>
+</div>

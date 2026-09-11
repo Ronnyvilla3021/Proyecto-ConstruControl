@@ -1,0 +1,421 @@
+/* ==========================================
+   ConstruControl — Dashboard / Resumen General
+   Acento: verde compras (#10B981)
+   Soporta: modo claro y modo oscuro (.app-dark)
+   ========================================== */
+
+:host {
+  display: block;
+
+  --rg-surface: #FFFFFF;
+  --rg-surface-2: #F8FAFC;
+  --rg-border: rgba(15, 23, 42, 0.08);
+  --rg-border-strong: rgba(15, 23, 42, 0.14);
+
+  --rg-text: #0F172A;
+  --rg-text-muted: #64748B;
+
+  --rg-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --rg-shadow-md: 0 6px 18px rgba(15, 23, 42, 0.08);
+  --rg-shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.12);
+
+  --rg-accent: #10B981;
+  --rg-accent-soft: #34D399;
+  --rg-accent-glow: rgba(16, 185, 129, 0.28);
+}
+
+/* ==========================================
+   Encabezado de página
+   ========================================== */
+.page-header {
+  margin-bottom: 24px;
+
+  h1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.55rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+    color: var(--rg-text);
+
+    i {
+      color: var(--rg-accent);
+      font-size: 1.35rem;
+      filter: drop-shadow(0 2px 6px var(--rg-accent-glow));
+    }
+  }
+
+  p {
+    margin: 0;
+    color: var(--rg-text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+}
+
+/* ==========================================
+   Grid de estadísticas (KPIs)
+   ========================================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+/* Card base heredada de .stat-card global; acá reforzamos */
+:host ::ng-deep .stat-card {
+  border-radius: var(--cc-radius) !important;
+  background: var(--rg-surface);
+  border: 1px solid var(--rg-border);
+  box-shadow: var(--rg-shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--rg-shadow-md);
+  }
+}
+
+.stat-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--rg-text-muted);
+  margin-bottom: 2px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--rg-text);
+  line-height: 1.1;
+}
+
+/* Acentos por tipo de stat + barra lateral de color */
+.stat-blue {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: linear-gradient(180deg, #3B82F6, #60A5FA);
+  }
+  .stat-icon {
+    background: rgba(59, 130, 246, 0.12);
+    color: #3B82F6;
+  }
+  &:hover .stat-icon { background: rgba(59, 130, 246, 0.20); }
+}
+
+.stat-green {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: linear-gradient(180deg, #10B981, #34D399);
+  }
+  .stat-icon {
+    background: rgba(16, 185, 129, 0.12);
+    color: #10B981;
+  }
+  &:hover .stat-icon { background: rgba(16, 185, 129, 0.20); }
+}
+
+.stat-red {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: linear-gradient(180deg, #EF4444, #F87171);
+  }
+  .stat-icon {
+    background: rgba(239, 68, 68, 0.12);
+    color: #EF4444;
+  }
+  &:hover .stat-icon { background: rgba(239, 68, 68, 0.20); }
+}
+
+.stat-amber {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: linear-gradient(180deg, #F59E0B, #FBBF24);
+  }
+  .stat-icon {
+    background: rgba(245, 158, 11, 0.12);
+    color: #F59E0B;
+  }
+  &:hover .stat-icon { background: rgba(245, 158, 11, 0.20); }
+}
+
+/* ==========================================
+   Layout principal: 2 columnas
+   ========================================== */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  align-items: start;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 14px;
+  color: var(--rg-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 16px;
+    border-radius: 2px;
+    background: var(--rg-accent);
+  }
+}
+
+/* ==========================================
+   Grid de obras
+   ========================================== */
+.obras-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+:host ::ng-deep .obra-card {
+  border-radius: var(--cc-radius) !important;
+  background: var(--rg-surface);
+  border: 1px solid var(--rg-border);
+  box-shadow: var(--rg-shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--rg-shadow-md);
+    border-color: var(--rg-accent-glow);
+  }
+}
+
+.obra-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--rg-text);
+    letter-spacing: -0.01em;
+  }
+}
+
+.obra-ubicacion,
+.obra-presupuesto {
+  font-size: 0.85rem;
+  color: var(--rg-text-muted);
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  i { font-size: 0.85rem; opacity: 0.8; }
+}
+
+.obra-presupuesto {
+  font-weight: 600;
+  color: var(--rg-text);
+}
+
+.ver-detalle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--rg-accent);
+  transition: gap 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    gap: 10px;
+    color: var(--rg-accent-soft);
+  }
+}
+
+/* ==========================================
+   Estado vacío
+   ========================================== */
+.vacio {
+  text-align: center;
+  padding: 32px 24px;
+  color: var(--rg-text-muted);
+  margin: 0;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* ==========================================
+   Lista de notificaciones
+   ========================================== */
+.lista-notificaciones {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    color: var(--rg-text);
+    transition: background 0.2s ease, transform 0.15s ease;
+
+    i {
+      color: var(--cc-accent-alerta, #EF4444);
+      margin-top: 2px;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    &:hover {
+      background: var(--rg-surface-2);
+    }
+
+    &.no-leida {
+      background: rgba(245, 158, 11, 0.10);
+      font-weight: 600;
+      border-left: 3px solid #F59E0B;
+      padding-left: 9px;
+    }
+  }
+}
+
+/* ==========================================
+   MODO OSCURO
+   ========================================== */
+:host-context(.app-dark) {
+  --rg-surface: #161B26;
+  --rg-surface-2: #1C2230;
+  --rg-border: rgba(255, 255, 255, 0.06);
+  --rg-border-strong: rgba(255, 255, 255, 0.12);
+
+  --rg-text: #E5E7EB;
+  --rg-text-muted: #94A3B8;
+
+  --rg-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --rg-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --rg-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+
+  --rg-accent: #34D399;
+  --rg-accent-soft: #6EE7B7;
+  --rg-accent-glow: rgba(52, 211, 153, 0.35);
+}
+
+:host-context(.app-dark) .page-header h1 i {
+  filter: drop-shadow(0 0 10px var(--rg-accent-glow));
+}
+
+:host-context(.app-dark) ::ng-deep .stat-card,
+:host-context(.app-dark) ::ng-deep .obra-card {
+  background: var(--rg-surface);
+  border-color: var(--rg-border);
+}
+
+:host-context(.app-dark) ::ng-deep .stat-card:hover,
+:host-context(.app-dark) ::ng-deep .obra-card:hover {
+  border-color: var(--rg-accent-glow);
+  box-shadow: var(--rg-shadow-md), 0 0 0 1px var(--rg-accent-glow);
+}
+
+:host-context(.app-dark) .stat-blue .stat-icon {
+  background: rgba(96, 165, 250, 0.16);
+  color: #60A5FA;
+}
+:host-context(.app-dark) .stat-green .stat-icon {
+  background: rgba(52, 211, 153, 0.16);
+  color: #34D399;
+}
+:host-context(.app-dark) .stat-red .stat-icon {
+  background: rgba(248, 113, 113, 0.16);
+  color: #F87171;
+}
+:host-context(.app-dark) .stat-amber .stat-icon {
+  background: rgba(251, 191, 36, 0.16);
+  color: #FBBF24;
+}
+
+:host-context(.app-dark) .lista-notificaciones li:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+:host-context(.app-dark) .lista-notificaciones li.no-leida {
+  background: rgba(251, 191, 36, 0.10);
+  border-left-color: #FBBF24;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 768px) {
+  .page-header h1 { font-size: 1.3rem; }
+  .stat-value { font-size: 1.35rem; }
+  .stat-icon { width: 44px; height: 44px; font-size: 1.15rem; }
+  .dashboard-grid { gap: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host ::ng-deep .stat-card,
+  :host ::ng-deep .obra-card,
+  .ver-detalle { transition: none; }
+}

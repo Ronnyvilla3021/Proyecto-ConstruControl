@@ -5,6 +5,16 @@ export const routes: Routes = [
   { path: 'login', loadComponent: () => import('./features/auth/login/login').then(m => m.Login) },
 
   {
+    path: 'dashboard',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/dashboard/resumen-general/resumen-general').then(m => m.ResumenGeneral)
+  },
+  {
+    path: 'dashboard/:obraId',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/dashboard/dashboard/dashboard').then(m => m.Dashboard)
+  },
+  {
     path: 'obras',
     canActivate: [authGuard],
     loadComponent: () => import('./features/obras/obras-list/obras-list').then(m => m.ObrasList)
@@ -29,12 +39,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./features/personal/personal-list/personal-list').then(m => m.PersonalList)
   },
-  {
-    path: 'dashboard/:obraId',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/dashboard/dashboard/dashboard').then(m => m.Dashboard)
-  },
 
-  { path: '', redirectTo: 'obras', pathMatch: 'full' },
-  { path: '**', redirectTo: 'obras' }
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '**', redirectTo: 'dashboard' }
 ];

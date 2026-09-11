@@ -1,61 +1,99 @@
-<div class="materiales-container">
-  <div class="header">
-    <h1>Materiales</h1>
-    <button (click)="toggleFormulario()">
-      {{ mostrarFormulario() ? 'Cancelar' : 'Nuevo Material' }}
-    </button>
+<div class="page-header">
+  <div>
+    <h1><i class="pi pi-box"></i> Materiales</h1>
+    <p>Control de inventario y stock por material</p>
+  </div>
+</div>
+
+@if (errorMensaje()) {
+  <div class="alerta-error"><i class="pi pi-exclamation-triangle"></i> {{ errorMensaje() }}</div>
+}
+
+<div class="stats-grid">
+  <p-card styleClass="stat-card stat-amber">
+    <div class="stat-content">
+      <div class="stat-icon"><i class="pi pi-box"></i></div>
+      <div>
+        <span class="stat-label">Total de materiales</span>
+        <span class="stat-value">{{ totalMateriales() }}</span>
+      </div>
+    </div>
+  </p-card>
+
+  <p-card styleClass="stat-card stat-red">
+    <div class="stat-content">
+      <div class="stat-icon"><i class="pi pi-exclamation-triangle"></i></div>
+      <div>
+        <span class="stat-label">Stock crítico</span>
+        <span class="stat-value">{{ stockCritico() }}</span>
+      </div>
+    </div>
+  </p-card>
+</div>
+
+<p-card styleClass="table-card">
+  <div class="table-toolbar">
+    <button pButton icon="pi pi-plus" (click)="abrirDialogo()">Nuevo Material</button>
+    <span class="p-input-icon-left buscador">
+      <i class="pi pi-search"></i>
+      <input pInputText type="text" placeholder="Buscar material..." [ngModel]="filtro()" (ngModelChange)="filtro.set($event)" />
+    </span>
   </div>
 
-  @if (errorMensaje()) {
-    <div class="error-general">{{ errorMensaje() }}</div>
-  }
+  <p-table [value]="materialesFiltrados()" [loading]="cargando()" [paginator]="true" [rows]="8" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nombre</th>
+        <th>Stock actual</th>
+        <th>Stock mínimo</th>
+        <th>Unidad</th>
+        <th>Precio</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-material>
+      <tr>
+        <td class="col-nombre">{{ material.nombre }}</td>
+        <td class="col-stock">
+          <div class="stock-barra">
+            <p-progressbar [value]="porcentajeStock(material)" [showValue]="false"
+              [ngClass]="material.stockBajo ? 'bar-critico' : 'bar-ok'"></p-progressbar>
+            <span>{{ material.stock }}</span>
+          </div>
+        </td>
+        <td>{{ material.stockMinimo }}</td>
+        <td>{{ material.unidad }}</td>
+        <td>{{ material.precioUnitario | number:'1.2-2' }}</td>
+        <td><p-tag [value]="estadoLabel(material)" [severity]="estadoSeverity(material)"></p-tag></td>
+        <td class="acciones">
+          <button pButton icon="pi pi-trash" severity="danger" [outlined]="true" size="small" (click)="eliminarMaterial(material.id)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="7" class="vacio">No hay materiales registrados todavía.</td></tr>
+    </ng-template>
+  </p-table>
+</p-card>
 
-  @if (mostrarFormulario()) {
-    <form [formGroup]="form" (ngSubmit)="crearMaterial()" class="form-crear">
-      <label>Nombre del material
-        <input formControlName="nombre" placeholder="Ej: Cemento Portland" />
-      </label>
-      <label>Unidad de medida
-        <input formControlName="unidad" placeholder="kg, saco, m3..." />
-      </label>
-      <label>Stock mínimo (umbral de alerta)
-        <input formControlName="stockMinimo" type="number" />
-      </label>
-      <label>Precio unitario (USD)
-        <input formControlName="precioUnitario" type="number" />
-      </label>
-      <button type="submit">Guardar</button>
-    </form>
-  }
-
-  @if (cargando()) {
-    <p>Cargando...</p>
-  } @else {
-    <table>
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Stock actual</th>
-          <th>Stock mínimo</th>
-          <th>Unidad</th>
-          <th>Precio</th>
-          <th>Estado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (material of materiales(); track material.id) {
-          <tr [class.stock-bajo]="material.stockBajo">
-            <td>{{ material.nombre }}</td>
-            <td>{{ material.stock }}</td>
-            <td>{{ material.stockMinimo }}</td>
-            <td>{{ material.unidad }}</td>
-            <td>{{ material.precioUnitario | number:'1.2-2' }}</td>
-            <td>{{ material.stockBajo ? 'Stock bajo' : 'OK' }}</td>
-            <td><button (click)="eliminarMaterial(material.id)">Eliminar</button></td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  }
-</div>
+<p-dialog header="Nuevo Material" [(visible)]="mostrarDialogo" [modal]="true" [style]="{ width: '450px' }" [breakpoints]="{ '640px': '95vw' }">
+  <form [formGroup]="form" (ngSubmit)="crearMaterial()" class="form-dialogo">
+    <label>Nombre del material
+      <input pInputText formControlName="nombre" placeholder="Ej: Cemento Portland" />
+    </label>
+    <label>Unidad de medida
+      <input pInputText formControlName="unidad" placeholder="kg, saco, m3..." />
+    </label>
+    <label>Stock mínimo (umbral de alerta)
+      <p-inputnumber formControlName="stockMinimo" [min]="0"></p-inputnumber>
+    </label>
+    <label>Precio unitario (USD)
+      <p-inputnumber formControlName="precioUnitario" mode="decimal" [minFractionDigits]="2" [min]="0"></p-inputnumber>
+    </label>
+    <div class="form-acciones">
+      <button pButton type="button" [text]="true" (click)="mostrarDialogo.set(false)">Cancelar</button>
+      <button pButton type="submit" icon="pi pi-check">Guardar</button>
+    </div>
+  </form>
+</p-dialog>

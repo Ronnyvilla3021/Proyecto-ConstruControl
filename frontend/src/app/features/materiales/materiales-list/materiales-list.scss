@@ -1,0 +1,681 @@
+/* ==========================================
+   ConstruControl — Materiales / Lista
+   Acento: ámbar materiales (#F59E0B)
+   Soporta: modo claro y modo oscuro (.app-dark)
+   ========================================== */
+
+:host {
+  display: block;
+
+  --mt-surface: #FFFFFF;
+  --mt-surface-2: #F8FAFC;
+  --mt-border: rgba(15, 23, 42, 0.08);
+  --mt-border-strong: rgba(15, 23, 42, 0.14);
+
+  --mt-text: #0F172A;
+  --mt-text-muted: #64748B;
+
+  --mt-accent: #F59E0B;
+  --mt-accent-deep: #B45309;
+  --mt-accent-soft: #FBBF24;
+  --mt-accent-glow: rgba(245, 158, 11, 0.30);
+
+  --mt-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --mt-shadow-md: 0 6px 18px rgba(15, 23, 42, 0.08);
+  --mt-shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.12);
+}
+
+/* ==========================================
+   Encabezado
+   ========================================== */
+.page-header {
+  margin-bottom: 24px;
+
+  h1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.55rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+    color: var(--mt-text);
+
+    i {
+      color: var(--mt-accent);
+      font-size: 1.35rem;
+      filter: drop-shadow(0 2px 6px var(--mt-accent-glow));
+    }
+  }
+
+  p {
+    margin: 0;
+    color: var(--mt-text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+}
+
+/* ==========================================
+   Alerta de error
+   ========================================== */
+.alerta-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #B91C1C;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.22);
+
+  i {
+    color: #EF4444;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+}
+
+/* ==========================================
+   Grid de estadísticas
+   ========================================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+:host ::ng-deep .stat-card {
+  border-radius: var(--cc-radius) !important;
+  background: var(--mt-surface);
+  border: 1px solid var(--mt-border);
+  box-shadow: var(--mt-shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--mt-shadow-md);
+  }
+}
+
+.stat-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--mt-text-muted);
+  margin-bottom: 2px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--mt-text);
+  line-height: 1.1;
+}
+
+/* Barra lateral + tinte por tipo de stat */
+.stat-amber {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: linear-gradient(180deg, #F59E0B, #FBBF24);
+  }
+  .stat-icon { background: rgba(245, 158, 11, 0.12); color: #F59E0B; }
+  &:hover .stat-icon { background: rgba(245, 158, 11, 0.20); }
+}
+
+.stat-red {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: linear-gradient(180deg, #EF4444, #F87171);
+  }
+  .stat-icon { background: rgba(239, 68, 68, 0.12); color: #EF4444; }
+  &:hover .stat-icon { background: rgba(239, 68, 68, 0.20); }
+}
+
+/* ==========================================
+   Toolbar de la tabla
+   ========================================== */
+:host ::ng-deep .table-card {
+  border-radius: var(--cc-radius) !important;
+  background: var(--mt-surface);
+  border: 1px solid var(--mt-border);
+  box-shadow: var(--mt-shadow-sm);
+  overflow: hidden;
+
+  .p-card-body {
+    padding: 0;
+  }
+}
+
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 20px 20px 0;
+
+  :host ::ng-deep .p-button {
+    border-radius: 12px;
+    font-weight: 700;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, #B45309 0%, #D97706 55%, #F59E0B 100%);
+    border: 1px solid #B45309;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.15) inset,
+      0 8px 20px rgba(180, 83, 9, 0.30);
+    transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+
+    &:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.2) inset,
+        0 12px 28px rgba(180, 83, 9, 0.40);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+.buscador {
+  min-width: 220px;
+  flex: 1;
+  max-width: 320px;
+  position: relative;
+
+  i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--mt-text-muted);
+    font-size: 0.9rem;
+    z-index: 1;
+    pointer-events: none;
+    transition: color 0.2s ease;
+  }
+
+  input {
+    width: 100%;
+    padding-left: 40px !important;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--mt-surface-2);
+    border: 1px solid var(--mt-border);
+    color: var(--mt-text);
+    font-size: 0.9rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+
+    &::placeholder {
+      color: var(--mt-text-muted);
+      opacity: 0.7;
+    }
+
+    &:hover { border-color: var(--mt-border-strong); }
+
+    &:focus,
+    &:focus-visible {
+      outline: none;
+      background: var(--mt-surface);
+      border-color: var(--mt-accent);
+      box-shadow: 0 0 0 4px var(--mt-accent-glow);
+    }
+  }
+
+  /* Ícono se ilumina cuando el input tiene foco */
+  &:focus-within i {
+    color: var(--mt-accent);
+  }
+}
+
+/* ==========================================
+   Tabla
+   ========================================== */
+:host ::ng-deep .p-datatable {
+  .p-datatable-thead > tr > th {
+    background: var(--mt-surface-2);
+    color: var(--mt-text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--mt-border);
+    border-top: none;
+  }
+
+  .p-datatable-tbody > tr {
+    transition: background 0.15s ease;
+
+    > td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--mt-border);
+      color: var(--mt-text);
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
+
+    &:hover {
+      background: var(--mt-surface-2);
+    }
+
+    &:last-child > td {
+      border-bottom: none;
+    }
+  }
+
+  .p-datatable-loading-overlay {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(2px);
+  }
+
+  /* Paginador */
+  .p-paginator {
+    background: var(--mt-surface);
+    border-top: 1px solid var(--mt-border);
+    padding: 12px 18px;
+    border-radius: 0 0 var(--cc-radius) var(--cc-radius);
+
+    .p-paginator-page,
+    .p-paginator-next,
+    .p-paginator-prev,
+    .p-paginator-first,
+    .p-paginator-last {
+      border-radius: 8px;
+      transition: background 0.15s ease, color 0.15s ease;
+
+      &:hover {
+        background: var(--mt-surface-2);
+      }
+
+      &.p-highlight {
+        background: var(--mt-accent);
+        color: #FFFFFF;
+        border-color: var(--mt-accent);
+      }
+    }
+  }
+}
+
+/* ==========================================
+   Columna nombre
+   ========================================== */
+.col-nombre {
+  font-weight: 600;
+  color: var(--mt-text);
+}
+
+/* ==========================================
+   Barra de stock (protagonista visual)
+   ========================================== */
+.stock-barra {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 160px;
+
+  p-progressbar {
+    flex: 1;
+  }
+
+  span {
+    font-size: 0.85rem;
+    font-weight: 700;
+    min-width: 26px;
+    font-variant-numeric: tabular-nums;
+    color: var(--mt-text);
+  }
+}
+
+/* Progressbar base (refuerza lo global) */
+:host ::ng-deep .p-progressbar {
+  height: 8px !important;
+  border-radius: 6px;
+  background: var(--mt-surface-2);
+  overflow: hidden;
+
+  .p-progressbar-value {
+    border-radius: 6px;
+    transition: width 0.4s ease;
+  }
+}
+
+/* Colores por criticidad (refuerzan tus clases bar-ok / bar-critico) */
+:host ::ng-deep .bar-ok .p-progressbar-value {
+  background: linear-gradient(90deg, #10B981, #34D399) !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.35);
+}
+
+:host ::ng-deep .bar-critico .p-progressbar-value {
+  background: linear-gradient(90deg, #EF4444, #F87171) !important;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.45);
+}
+
+/* ==========================================
+   Acciones
+   ========================================== */
+.acciones {
+  display: flex;
+  gap: 6px;
+
+  :host ::ng-deep .p-button {
+    border-radius: 10px;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+  }
+
+  :host ::ng-deep .p-button.p-button-danger:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(239, 68, 68, 0.25);
+  }
+}
+
+/* ==========================================
+   Estado vacío
+   ========================================== */
+.vacio {
+  text-align: center;
+  padding: 40px 32px;
+  color: var(--mt-text-muted);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* ==========================================
+   Diálogo
+   ========================================== */
+:host ::ng-deep .p-dialog {
+  border-radius: var(--cc-radius);
+  overflow: hidden;
+  box-shadow: var(--mt-shadow-lg);
+
+  .p-dialog-header {
+    background: var(--mt-surface);
+    border-bottom: 1px solid var(--mt-border);
+    padding: 20px 24px;
+    font-weight: 700;
+    color: var(--mt-text);
+  }
+
+  .p-dialog-content {
+    background: var(--mt-surface);
+    padding: 24px;
+    color: var(--mt-text);
+  }
+
+  .p-dialog-header-icon {
+    color: var(--mt-text-muted);
+    &:hover { color: var(--mt-text); background: var(--mt-surface-2); }
+  }
+}
+
+.form-dialogo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--mt-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  input,
+  p-inputnumber {
+    width: 100%;
+  }
+
+  :host ::ng-deep input.p-inputtext,
+  :host ::ng-deep .p-inputnumber-input {
+    width: 100%;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--mt-surface-2);
+    border: 1px solid var(--mt-border);
+    color: var(--mt-text);
+    font-size: 0.92rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+
+    &::placeholder {
+      color: var(--mt-text-muted);
+      opacity: 0.7;
+    }
+
+    &:hover { border-color: var(--mt-border-strong); }
+
+    &:focus,
+    &:focus-visible {
+      outline: none;
+      background: var(--mt-surface);
+      border-color: var(--mt-accent);
+      box-shadow: 0 0 0 4px var(--mt-accent-glow);
+    }
+  }
+}
+
+.form-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--mt-border);
+
+  :host ::ng-deep .p-button {
+    border-radius: 10px;
+    font-weight: 700;
+    padding: 10px 18px;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+  }
+
+  :host ::ng-deep .p-button:not(.p-button-text):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px var(--mt-accent-glow);
+  }
+}
+
+/* ==========================================
+   MODO OSCURO
+   ========================================== */
+:host-context(.app-dark) {
+  --mt-surface: #161B26;
+  --mt-surface-2: #1C2230;
+  --mt-border: rgba(255, 255, 255, 0.06);
+  --mt-border-strong: rgba(255, 255, 255, 0.14);
+
+  --mt-text: #E5E7EB;
+  --mt-text-muted: #94A3B8;
+
+  --mt-accent: #FBBF24;
+  --mt-accent-deep: #F59E0B;
+  --mt-accent-soft: #FCD34D;
+  --mt-accent-glow: rgba(251, 191, 36, 0.35);
+
+  --mt-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --mt-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --mt-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
+
+:host-context(.app-dark) .page-header h1 i {
+  filter: drop-shadow(0 0 10px var(--mt-accent-glow));
+}
+
+:host-context(.app-dark) ::ng-deep .stat-card,
+:host-context(.app-dark) ::ng-deep .table-card {
+  background: var(--mt-surface);
+  border-color: var(--mt-border);
+}
+
+:host-context(.app-dark) ::ng-deep .stat-card:hover {
+  border-color: var(--mt-accent-glow);
+  box-shadow: var(--mt-shadow-md), 0 0 0 1px var(--mt-accent-glow);
+}
+
+:host-context(.app-dark) .stat-amber .stat-icon {
+  background: rgba(251, 191, 36, 0.16);
+  color: #FBBF24;
+}
+:host-context(.app-dark) .stat-red .stat-icon {
+  background: rgba(248, 113, 113, 0.16);
+  color: #F87171;
+}
+
+/* Buscador dark */
+:host-context(.app-dark) .buscador input {
+  background: var(--mt-surface-2);
+
+  &:focus,
+  &:focus-visible {
+    background: #1F2633;
+    border-color: var(--mt-accent);
+    box-shadow: 0 0 0 4px var(--mt-accent-glow), 0 0 18px rgba(251, 191, 36, 0.25);
+  }
+}
+
+/* Tabla dark */
+:host-context(.app-dark) ::ng-deep .p-datatable {
+  .p-datatable-thead > tr > th {
+    background: #1A2030;
+  }
+
+  .p-datatable-tbody > tr:hover {
+    background: rgba(251, 191, 36, 0.05);
+  }
+
+  .p-datatable-loading-overlay {
+    background: rgba(15, 20, 25, 0.7);
+  }
+
+  .p-paginator {
+    background: var(--mt-surface);
+    border-top-color: var(--mt-border);
+
+    .p-paginator-page.p-highlight {
+      background: var(--mt-accent);
+      color: #1A2030;
+    }
+  }
+}
+
+/* Barra stock dark */
+:host-context(.app-dark) ::ng-deep .p-progressbar {
+  background: #232A3A;
+}
+
+:host-context(.app-dark) ::ng-deep .bar-ok .p-progressbar-value {
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.55);
+}
+
+:host-context(.app-dark) ::ng-deep .bar-critico .p-progressbar-value {
+  box-shadow: 0 0 12px rgba(248, 113, 113, 0.6);
+}
+
+/* Diálogo dark */
+:host-context(.app-dark) ::ng-deep .p-dialog {
+  background: var(--mt-surface);
+  border: 1px solid var(--mt-border-strong);
+
+  .p-dialog-header,
+  .p-dialog-content {
+    background: var(--mt-surface);
+    color: var(--mt-text);
+  }
+
+  .p-dialog-header {
+    border-bottom-color: var(--mt-border);
+  }
+}
+
+/* Inputs dark */
+:host-context(.app-dark) .form-dialogo {
+  :host ::ng-deep input.p-inputtext,
+  :host ::ng-deep .p-inputnumber-input {
+    background: var(--mt-surface-2);
+    border-color: var(--mt-border);
+
+    &:focus,
+    &:focus-visible {
+      background: #1F2633;
+      border-color: var(--mt-accent);
+      box-shadow: 0 0 0 4px var(--mt-accent-glow), 0 0 18px rgba(251, 191, 36, 0.25);
+    }
+  }
+}
+
+/* Alerta error dark */
+:host-context(.app-dark) .alerta-error {
+  color: #FCA5A5;
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(248, 113, 113, 0.35);
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 768px) {
+  .page-header h1 { font-size: 1.3rem; }
+  .stat-value { font-size: 1.35rem; }
+  .stat-icon { width: 44px; height: 44px; font-size: 1.15rem; }
+
+  .table-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .buscador {
+    max-width: 100%;
+  }
+
+  .stock-barra {
+    min-width: 120px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host ::ng-deep .stat-card,
+  :host ::ng-deep .p-button,
+  :host ::ng-deep .p-progressbar-value { transition: none; }
+}

@@ -1,89 +1,577 @@
 /* ==========================================
-   ConstruControl - Estilos globales
+   ConstruControl — Estilos globales
+   Diseño dark-first + light mode sólido
    ========================================== */
 
 @import "primeicons/primeicons.css";
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+/* ==========================================
+   1) TOKENS GLOBALES
+   ========================================== */
 :root {
+  /* Layout */
   --cc-radius: 16px;
   --cc-radius-sm: 10px;
+  --cc-radius-xs: 8px;
   --cc-sidebar-width: 260px;
   --cc-topbar-height: 72px;
 
-  /* Acentos por modulo (igual espiritu que la referencia) */
-  --cc-accent-obras: #3B82F6;      /* azul */
-  --cc-accent-materiales: #F59E0B; /* ambar */
-  --cc-accent-compras: #10B981;    /* verde */
-  --cc-accent-personal: #A855F7;   /* morado */
-  --cc-accent-alerta: #EF4444;     /* rojo */
+  /* Acentos por módulo */
+  --cc-accent-obras: #3B82F6;
+  --cc-accent-materiales: #F59E0B;
+  --cc-accent-compras: #10B981;
+  --cc-accent-personal: #A855F7;
+  --cc-accent-consumo: #F97316;
+  --cc-accent-dashboard: #10B981;
+  --cc-accent-alerta: #EF4444;
+  --cc-accent-info: #0EA5E9;
+
+  /* ============ MODO CLARO (default :root) ============ */
+  --cc-bg: #EAEEF3;
+  --cc-bg-2: #E1E7EE;
+
+  --cc-surface: #FFFFFF;
+  --cc-surface-2: #F8FAFC;
+  --cc-surface-3: #F1F5F9;
+
+  --cc-border: #E2E8F0;             /* bordes internos */
+  --cc-border-strong: #CBD5E1;      /* bordes de cards y contenedores */
+  --cc-border-hover: #94A3B8;
+
+  --cc-text: #0F172A;
+  --cc-text-muted: #64748B;
+  --cc-text-soft: #94A3B8;
+
+  --cc-shadow-xs: 0 0 0 1px rgba(15, 23, 42, 0.04);
+  --cc-shadow-sm:
+    0 1px 2px rgba(15, 23, 42, 0.06),
+    0 0 0 1px rgba(15, 23, 42, 0.04);
+  --cc-shadow-md:
+    0 1px 2px rgba(15, 23, 42, 0.06),
+    0 4px 12px rgba(15, 23, 42, 0.06),
+    0 0 0 1px rgba(15, 23, 42, 0.04);
+  --cc-shadow-lg:
+    0 4px 12px rgba(15, 23, 42, 0.08),
+    0 16px 40px rgba(15, 23, 42, 0.10),
+    0 0 0 1px rgba(15, 23, 42, 0.04);
+
+  --cc-overlay: rgba(15, 23, 42, 0.45);
 }
 
+/* ============ MODO OSCURO (principal) ============ */
+html.app-dark {
+  --cc-bg: #0F1419;
+  --cc-bg-2: #0B0F14;
+
+  --cc-surface: #161B26;
+  --cc-surface-2: #1C2230;
+  --cc-surface-3: #232A3A;
+
+  --cc-border: rgba(255, 255, 255, 0.06);
+  --cc-border-strong: rgba(255, 255, 255, 0.10);
+  --cc-border-hover: rgba(255, 255, 255, 0.18);
+
+  --cc-text: #E5E7EB;
+  --cc-text-muted: #94A3B8;
+  --cc-text-soft: #64748B;
+
+  --cc-shadow-xs: 0 0 0 1px rgba(0, 0, 0, 0.3);
+  --cc-shadow-sm:
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+  --cc-shadow-md:
+    0 4px 12px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+  --cc-shadow-lg:
+    0 8px 24px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+
+  --cc-overlay: rgba(0, 0, 0, 0.65);
+}
+
+/* ==========================================
+   2) BASE
+   ========================================== */
 * {
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--p-surface-50, #F4F5F7);
-  color: var(--p-surface-900, #1A1F2E);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  background: var(--cc-bg);
+  color: var(--cc-text);
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-.app-dark body,
 html.app-dark body {
-  background: #0F1419;
-  color: #E5E7EB;
+  background: var(--cc-bg);
 }
 
-/* Scrollbar mas discreto, se ve mejor en un dashboard oscuro */
+/* ==========================================
+   3) SCROLLBAR
+   ========================================== */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(128, 128, 128, 0.4);
-  border-radius: 4px;
+  width: 10px;
+  height: 10px;
 }
 
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.35);
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+
+  &:hover {
+    background: rgba(128, 128, 128, 0.55);
+    background-clip: content-box;
+  }
+}
+
+html.app-dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  background-clip: content-box;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.28);
+    background-clip: content-box;
+  }
+}
+
+/* ==========================================
+   4) LINKS Y FOCO
+   ========================================== */
 a {
   color: inherit;
   text-decoration: none;
 }
 
-/* ============ Tarjetas de estadisticas (reutilizable) ============ */
-.stat-card .p-card-body,
-.table-card .p-card-body {
-  padding: 20px;
+:focus-visible {
+  outline: 2px solid var(--cc-accent-obras);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
-.stat-card {
+/* ==========================================
+   5) PAGE HEADER (reutilizable)
+   ========================================== */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  h1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.55rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+    color: var(--cc-text);
+
+    i {
+      font-size: 1.35rem;
+    }
+  }
+
+  p {
+    margin: 0;
+    color: var(--cc-text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+}
+
+/* ==========================================
+   6) CARDS (PrimeNG p-card)
+   ========================================== */
+.stat-card,
+.table-card {
   border-radius: var(--cc-radius) !important;
-  border: 1px solid var(--p-surface-200, rgba(0,0,0,0.06));
-}
+  background: var(--cc-surface) !important;
+  border: 1px solid var(--cc-border-strong) !important;
+  box-shadow: var(--cc-shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
 
-.app-dark .stat-card,
-.app-dark .table-card {
-  background: #161B26 !important;
-  border-color: rgba(255, 255, 255, 0.06) !important;
+  .p-card-body {
+    padding: 20px;
+  }
 }
 
 .table-card {
-  border-radius: var(--cc-radius) !important;
-  border: 1px solid var(--p-surface-200, rgba(0,0,0,0.06));
+  .p-card-body {
+    padding: 0;
+  }
 }
 
-.table-card .p-card-body {
-  padding: 0;
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--cc-shadow-md);
 }
 
-.table-card .p-datatable {
+/* ==========================================
+   7) DATATABLE PrimeNG — CORREGIDO
+   Usa tokens globales, funciona en ::ng-deep
+   ========================================== */
+.p-datatable {
+  background: transparent;
   border-radius: var(--cc-radius);
   overflow: hidden;
+
+  .p-datatable-header {
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+
+  .p-datatable-thead > tr > th {
+    background: var(--cc-surface-2);
+    color: var(--cc-text-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 14px 18px;
+    border: none;
+    border-bottom: 1px solid var(--cc-border-strong);
+    white-space: nowrap;
+  }
+
+  .p-datatable-tbody > tr {
+    background: var(--cc-surface);
+    transition: background 0.15s ease;
+
+    > td {
+      background: transparent;
+      color: var(--cc-text);
+      padding: 14px 18px;
+      border: none;
+      border-bottom: 1px solid var(--cc-border);
+      font-size: 0.9rem;
+      vertical-align: middle;
+      font-variant-numeric: tabular-nums;
+    }
+
+    &:hover {
+      background: var(--cc-surface-2);
+    }
+
+    &:last-child > td {
+      border-bottom: none;
+    }
+  }
+
+  .p-datatable-loading-overlay {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(2px);
+  }
+
+  .p-datatable-emptymessage > td,
+  .p-datatable-emptymessage {
+    background: var(--cc-surface);
+    color: var(--cc-text-muted);
+    font-style: italic;
+    text-align: center;
+    padding: 32px 24px;
+    border: none;
+  }
+
+  .p-paginator {
+    background: var(--cc-surface);
+    border-top: 1px solid var(--cc-border-strong);
+    padding: 12px 18px;
+
+    .p-paginator-page,
+    .p-paginator-next,
+    .p-paginator-prev,
+    .p-paginator-first,
+    .p-paginator-last {
+      border-radius: var(--cc-radius-xs);
+      min-width: 34px;
+      height: 34px;
+      transition: background 0.15s ease, color 0.15s ease;
+
+      &:hover {
+        background: var(--cc-surface-2);
+      }
+
+      &.p-highlight {
+        background: var(--cc-accent-obras);
+        color: #FFFFFF;
+        border-color: var(--cc-accent-obras);
+      }
+    }
+  }
+}
+
+html.app-dark .p-datatable {
+  .p-datatable-thead > tr > th {
+    background: #1A2030;
+    color: #94A3B8;
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .p-datatable-tbody > tr {
+    background: var(--cc-surface);
+
+    > td {
+      color: var(--cc-text);
+      border-bottom-color: var(--cc-border);
+    }
+
+    &:hover {
+      background: rgba(96, 165, 250, 0.05);
+    }
+  }
+
+  .p-datatable-loading-overlay {
+    background: rgba(15, 20, 25, 0.75);
+  }
+
+  .p-paginator {
+    background: var(--cc-surface);
+    border-top-color: var(--cc-border-strong);
+  }
+}
+
+/* ==========================================
+   8) DIÁLOGOS PrimeNG
+   ========================================== */
+.p-dialog {
+  border-radius: var(--cc-radius) !important;
+  overflow: hidden;
+  background: var(--cc-surface) !important;
+  border: 1px solid var(--cc-border-strong);
+  box-shadow: var(--cc-shadow-lg) !important;
+
+  .p-dialog-header {
+    background: var(--cc-surface) !important;
+    color: var(--cc-text) !important;
+    border-bottom: 1px solid var(--cc-border);
+    padding: 20px 24px;
+    font-weight: 700;
+  }
+
+  .p-dialog-content {
+    background: var(--cc-surface) !important;
+    color: var(--cc-text) !important;
+    padding: 24px;
+  }
+
+  .p-dialog-header-icon {
+    color: var(--cc-text-muted);
+    transition: background 0.15s ease, color 0.15s ease;
+
+    &:hover {
+      color: var(--cc-text);
+      background: var(--cc-surface-2);
+    }
+  }
+}
+
+/* ==========================================
+   9) INPUTS PrimeNG (pInputText, p-inputnumber, etc.)
+   ========================================== */
+.p-inputtext,
+.p-inputnumber-input,
+.p-password input,
+.p-datepicker-input {
+  border-radius: var(--cc-radius-sm) !important;
+  background: var(--cc-surface-2) !important;
+  border: 1px solid var(--cc-border-strong) !important;
+  color: var(--cc-text) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+
+  &::placeholder {
+    color: var(--cc-text-soft) !important;
+  }
+
+  &:hover {
+    border-color: var(--cc-border-hover) !important;
+  }
+
+  &:focus,
+  &:focus-visible {
+    outline: none !important;
+    background: var(--cc-surface) !important;
+    border-color: var(--cc-accent-obras) !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.20) !important;
+  }
+}
+
+/* ==========================================
+   10) BUSCADOR con ícono izquierdo
+   ========================================== */
+.p-input-icon-left {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+
+  i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--cc-text-muted);
+    z-index: 1;
+    font-size: 0.9rem;
+    pointer-events: none;
+    transition: color 0.2s ease;
+  }
+
+  input {
+    padding-left: 40px !important;
+    width: 100%;
+  }
+
+  &:focus-within i {
+    color: var(--cc-accent-obras);
+  }
+}
+
+/* ==========================================
+   11) PROGRESSBAR (stock)
+   ========================================== */
+.p-progressbar {
+  height: 8px !important;
+  border-radius: 6px !important;
+  background: var(--cc-surface-3) !important;
+  overflow: hidden;
+
+  .p-progressbar-value {
+    border-radius: 6px;
+    transition: width 0.4s ease;
+  }
+}
+
+.bar-ok .p-progressbar-value {
+  background: linear-gradient(90deg, #10B981, #34D399) !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.35);
+}
+
+.bar-critico .p-progressbar-value {
+  background: linear-gradient(90deg, #EF4444, #F87171) !important;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.45);
+}
+
+html.app-dark {
+  .p-progressbar {
+    background: #232A3A !important;
+  }
+
+  .bar-ok .p-progressbar-value {
+    box-shadow: 0 0 12px rgba(52, 211, 153, 0.55);
+  }
+
+  .bar-critico .p-progressbar-value {
+    box-shadow: 0 0 12px rgba(248, 113, 113, 0.6);
+  }
+}
+
+/* ==========================================
+   12) TAG PrimeNG
+   ========================================== */
+.p-tag {
+  border-radius: 999px !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  padding: 4px 12px !important;
+  letter-spacing: 0.02em;
+}
+
+/* ==========================================
+   13) BOTONES PrimeNG (base redondeada)
+   ========================================== */
+.p-button {
+  border-radius: var(--cc-radius-sm);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.p-button:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+.p-button:not(:disabled):active {
+  transform: translateY(0);
+}
+
+/* ==========================================
+   14) UTILIDADES
+   ========================================== */
+.alerta-error,
+.error-general {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--cc-radius-sm);
+  margin-bottom: 20px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #B91C1C;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.22);
+
+  i {
+    color: #EF4444;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+}
+
+html.app-dark {
+  .alerta-error,
+  .error-general {
+    color: #FCA5A5;
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(248, 113, 113, 0.35);
+  }
+}
+
+.vacio {
+  text-align: center;
+  padding: 40px 32px;
+  color: var(--cc-text-muted);
+  font-size: 0.9rem;
+  font-style: italic;
+  margin: 0;
+}
+
+/* ==========================================
+   15) FORM LABELS (patrón común)
+   ========================================== */
+label {
+  font-family: inherit;
+}
+
+/* ==========================================
+   16) RESPETO A PREFERENCIAS DE MOVIMIENTO
+   ========================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

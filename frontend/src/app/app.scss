@@ -1,12 +1,23 @@
+/* ==========================================
+   ConstruControl — Layout principal (App)
+   Sidebar + Topbar + Content
+   Dark-first · Sidebar siempre oscuro
+   ========================================== */
+
+/* ==========================================
+   1) SHELL
+   ========================================== */
 .app-shell {
   display: flex;
   min-height: 100vh;
 }
 
-/* ============ SIDEBAR ============ */
+/* ==========================================
+   2) SIDEBAR (siempre oscuro, ancla visual)
+   ========================================== */
 .sidebar {
   width: var(--cc-sidebar-width);
-  background: #12161F;
+  background: #0F1319;
   color: #E5E7EB;
   display: flex;
   flex-direction: column;
@@ -19,34 +30,97 @@
   border-right: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+/* ==========================================
+   3) HEADER DEL SIDEBAR + LOGO (Variante A)
+   Logo grande centrado, texto debajo
+   ========================================== */
 .sidebar-header {
-  padding: 24px 20px;
+  padding: 28px 20px 24px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  /* Halo radial sutil detrás del logo */
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.10) 0%, transparent 65%);
+    pointer-events: none;
+  }
 }
 
 .logo {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
 
-  i {
-    font-size: 1.6rem;
-    color: var(--cc-accent-materiales);
+  .logo-img {
+    /* Tamaño grande pero contenido */
+    width: 84px;
+    height: 84px;
+    flex-shrink: 0;
+
+    /* Forma */
+    border-radius: 18px;
+
+    /* Nitidez */
+    object-fit: cover;
+    object-position: center;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+
+    /* Borde + sombra: se ve como insignia intencional */
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow:
+      0 6px 20px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(0, 0, 0, 0.25) inset,
+      0 0 24px rgba(251, 191, 36, 0.08);
+
+    /* Transición */
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
   }
 
-  strong {
+  /* Glow ámbar al hover */
+  &:hover .logo-img {
+    transform: scale(1.04);
+    box-shadow:
+      0 8px 26px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba(0, 0, 0, 0.25) inset,
+      0 0 28px rgba(251, 191, 36, 0.35);
+  }
+
+  .logo-title {
     display: block;
-    font-size: 1.05rem;
-    font-weight: 700;
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-align: center;
+    line-height: 1.1;
   }
 
-  span {
+  .logo-subtitle {
     display: block;
     font-size: 0.72rem;
-    color: #9CA3AF;
+    color: #94A3B8;
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: 0.02em;
   }
 }
 
+/* ==========================================
+   4) NAV
+   ========================================== */
 .sidebar-nav {
   flex: 1;
   padding: 16px 12px;
@@ -56,13 +130,14 @@
   overflow-y: auto;
 
   a {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 11px 14px;
     border-radius: var(--cc-radius-sm);
-    color: #D1D5DB;
-    font-size: 0.92rem;
+    color: #CBD5E1;
+    font-size: 0.9rem;
     font-weight: 500;
     transition: background 0.15s ease, color 0.15s ease;
 
@@ -70,21 +145,44 @@
       font-size: 1.05rem;
       width: 20px;
       text-align: center;
+      transition: transform 0.15s ease;
     }
 
     &:hover {
-      background: rgba(255, 255, 255, 0.06);
-      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+      color: #FFFFFF;
+
+      i {
+        transform: scale(1.08);
+      }
     }
 
+    /* Estado activo: fondo tintado + barra lateral de acento */
     &.active {
-      background: rgba(245, 158, 11, 0.15);
-      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+      color: #FFFFFF;
       font-weight: 600;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 60%;
+        border-radius: 0 3px 3px 0;
+        background: currentColor;
+        opacity: 0.9;
+        box-shadow: 0 0 12px currentColor;
+      }
     }
   }
 }
 
+/* ==========================================
+   5) FOOTER DEL SIDEBAR
+   ========================================== */
 .sidebar-footer {
   padding: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
@@ -101,12 +199,15 @@
   strong {
     display: block;
     font-size: 0.85rem;
-    color: #fff;
+    font-weight: 700;
+    color: #FFFFFF;
   }
+
   span {
     display: block;
     font-size: 0.72rem;
-    color: #9CA3AF;
+    color: #94A3B8;
+    font-weight: 500;
   }
 }
 
@@ -114,68 +215,108 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: var(--cc-radius-sm);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   font-size: 0.85rem;
-  color: #D1D5DB;
+  color: #CBD5E1;
+  transition: background 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.10);
+  }
 
   i {
     font-size: 1rem;
+    color: #FBBF24;
+    filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.5));
   }
 }
 
-/* ============ TOPBAR + CONTENIDO ============ */
+/* Botón logout del sidebar */
+.sidebar-footer :host ::ng-deep .p-button {
+  justify-content: center;
+  color: #CBD5E1;
+  border-radius: var(--cc-radius-sm);
+  transition: background 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background: rgba(239, 68, 68, 0.12);
+    color: #FCA5A5;
+  }
+}
+
+/* ==========================================
+   6) MAIN AREA
+   ========================================== */
 .main-area {
   flex: 1;
   margin-left: var(--cc-sidebar-width);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-width: 0;
 }
 
+/* ==========================================
+   7) TOPBAR (móvil)
+   ========================================== */
 .topbar {
+  display: none;
   height: var(--cc-topbar-height);
-  display: flex;
   align-items: center;
   gap: 16px;
   padding: 0 24px;
-  border-bottom: 1px solid var(--p-surface-200, rgba(0,0,0,0.08));
-  background: var(--p-surface-0, #fff);
+  background: var(--cc-surface);
+  border-bottom: 1px solid var(--cc-border-strong);
+  color: var(--cc-text);
   position: sticky;
   top: 0;
   z-index: 50;
-}
-
-.app-dark .topbar {
-  background: #161B26;
-  border-bottom-color: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
 }
 
 .menu-toggle {
-  display: none;
+  color: var(--cc-text) !important;
 }
 
 .page-title {
   font-size: 1.05rem;
   font-weight: 700;
   margin: 0;
+  color: var(--cc-text);
+  letter-spacing: -0.01em;
 }
 
 .topbar-spacer {
   flex: 1;
 }
 
+/* ==========================================
+   8) CONTENT
+   ========================================== */
 .content {
   padding: 24px;
   flex: 1;
+  min-width: 0;
 }
 
+/* ==========================================
+   9) OVERLAY (móvil)
+   ========================================== */
 .overlay {
   display: none;
 }
 
-/* ============ RESPONSIVE: tablet y movil ============ */
+/* ==========================================
+   10) RESPONSIVE — Tablet y móvil
+   ========================================== */
 @media (max-width: 960px) {
   .sidebar {
     transform: translateX(-100%);
+    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.4);
   }
 
   .sidebar-open .sidebar {
@@ -186,6 +327,10 @@
     margin-left: 0;
   }
 
+  .topbar {
+    display: flex;
+  }
+
   .menu-toggle {
     display: inline-flex;
   }
@@ -194,8 +339,10 @@
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
     z-index: 90;
+    animation: overlay-in 0.2s ease;
   }
 
   .content {
@@ -203,19 +350,47 @@
   }
 }
 
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 @media (max-width: 480px) {
   .topbar {
     padding: 0 14px;
+    gap: 12px;
   }
 
   .page-title {
     font-size: 0.95rem;
   }
+
+  .content {
+    padding: 12px;
+  }
+
+  /* En móvil achico un poco el logo para no comer pantalla */
+  .logo .logo-img {
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+  }
+
+  .logo .logo-title {
+    font-size: 1.05rem;
+  }
 }
 
-.logo-img {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  object-fit: cover;
+/* ==========================================
+   11) PREFERENCIA DE MOVIMIENTO REDUCIDO
+   ========================================== */
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .logo-img,
+  .sidebar-nav a,
+  .sidebar-nav a i,
+  .overlay {
+    transition: none;
+    animation: none;
+  }
 }
