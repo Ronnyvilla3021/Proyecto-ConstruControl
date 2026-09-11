@@ -1,12 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace ConstruControl.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialCreatePostgres : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,13 +16,13 @@ namespace ConstruControl.Infrastructure.Migrations
                 name: "Empleados",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cargo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Activo = table.Column<bool>(type: "bit", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(type: "text", nullable: false),
+                    Cargo = table.Column<string>(type: "text", nullable: false),
+                    FechaIngreso = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Activo = table.Column<bool>(type: "boolean", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,15 +33,15 @@ namespace ConstruControl.Infrastructure.Migrations
                 name: "Materiales",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Stock = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    StockMinimo = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    Unidad = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PrecioUnitario = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    Activo = table.Column<bool>(type: "bit", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(type: "text", nullable: false),
+                    Stock = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
+                    StockMinimo = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
+                    Unidad = table.Column<string>(type: "text", nullable: false),
+                    PrecioUnitario = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
+                    Activo = table.Column<bool>(type: "boolean", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,15 +52,15 @@ namespace ConstruControl.Infrastructure.Migrations
                 name: "Obras",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Ubicacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Presupuesto = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    FechaInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Estado = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Activo = table.Column<bool>(type: "bit", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(type: "text", nullable: false),
+                    Ubicacion = table.Column<string>(type: "text", nullable: false),
+                    Presupuesto = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
+                    FechaInicio = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Estado = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Activo = table.Column<bool>(type: "boolean", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,14 +71,14 @@ namespace ConstruControl.Infrastructure.Migrations
                 name: "Proveedores",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Contacto = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Telefono = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Activo = table.Column<bool>(type: "bit", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(type: "text", nullable: false),
+                    Contacto = table.Column<string>(type: "text", nullable: true),
+                    Telefono = table.Column<string>(type: "text", nullable: true),
+                    Email = table.Column<string>(type: "text", nullable: true),
+                    Activo = table.Column<bool>(type: "boolean", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -88,14 +89,14 @@ namespace ConstruControl.Infrastructure.Migrations
                 name: "Usuarios",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NombreCompleto = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Rol = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Activo = table.Column<bool>(type: "bit", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    NombreCompleto = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    PasswordHash = table.Column<string>(type: "text", nullable: false),
+                    Rol = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    Activo = table.Column<bool>(type: "boolean", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -106,13 +107,13 @@ namespace ConstruControl.Infrastructure.Migrations
                 name: "Asistencias",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EmpleadoId = table.Column<int>(type: "int", nullable: false),
-                    ObraId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    EmpleadoId = table.Column<int>(type: "integer", nullable: false),
+                    ObraId = table.Column<int>(type: "integer", nullable: false),
                     Fecha = table.Column<DateOnly>(type: "date", nullable: false),
-                    HoraEntrada = table.Column<TimeOnly>(type: "time", nullable: true),
-                    HoraSalida = table.Column<TimeOnly>(type: "time", nullable: true)
+                    HoraEntrada = table.Column<TimeOnly>(type: "time without time zone", nullable: true),
+                    HoraSalida = table.Column<TimeOnly>(type: "time without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -135,12 +136,12 @@ namespace ConstruControl.Infrastructure.Migrations
                 name: "FotosObra",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ObraId = table.Column<int>(type: "int", nullable: false),
-                    RutaArchivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FechaSubida = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ObraId = table.Column<int>(type: "integer", nullable: false),
+                    RutaArchivo = table.Column<string>(type: "text", nullable: false),
+                    Descripcion = table.Column<string>(type: "text", nullable: true),
+                    FechaSubida = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -157,14 +158,14 @@ namespace ConstruControl.Infrastructure.Migrations
                 name: "Notificaciones",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Tipo = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    ObraId = table.Column<int>(type: "int", nullable: true),
-                    MaterialId = table.Column<int>(type: "int", nullable: true),
-                    Mensaje = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Leida = table.Column<bool>(type: "bit", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Tipo = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    ObraId = table.Column<int>(type: "integer", nullable: true),
+                    MaterialId = table.Column<int>(type: "integer", nullable: true),
+                    Mensaje = table.Column<string>(type: "text", nullable: false),
+                    Leida = table.Column<bool>(type: "boolean", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -185,15 +186,15 @@ namespace ConstruControl.Infrastructure.Migrations
                 name: "Compras",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProveedorId = table.Column<int>(type: "int", nullable: false),
-                    ObraId = table.Column<int>(type: "int", nullable: false),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaRecepcion = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Estado = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Total = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ProveedorId = table.Column<int>(type: "integer", nullable: false),
+                    ObraId = table.Column<int>(type: "integer", nullable: false),
+                    UsuarioId = table.Column<int>(type: "integer", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    FechaRecepcion = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Estado = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Total = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -222,13 +223,13 @@ namespace ConstruControl.Infrastructure.Migrations
                 name: "Consumos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MaterialId = table.Column<int>(type: "int", nullable: false),
-                    ObraId = table.Column<int>(type: "int", nullable: false),
-                    ResponsableId = table.Column<int>(type: "int", nullable: false),
-                    Cantidad = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MaterialId = table.Column<int>(type: "integer", nullable: false),
+                    ObraId = table.Column<int>(type: "integer", nullable: false),
+                    ResponsableId = table.Column<int>(type: "integer", nullable: false),
+                    Cantidad = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
+                    Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -257,14 +258,14 @@ namespace ConstruControl.Infrastructure.Migrations
                 name: "Logs",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UsuarioId = table.Column<int>(type: "int", nullable: true),
-                    Accion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Entidad = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EntidadId = table.Column<int>(type: "int", nullable: true),
-                    Detalle = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UsuarioId = table.Column<int>(type: "integer", nullable: true),
+                    Accion = table.Column<string>(type: "text", nullable: false),
+                    Entidad = table.Column<string>(type: "text", nullable: false),
+                    EntidadId = table.Column<int>(type: "integer", nullable: true),
+                    Detalle = table.Column<string>(type: "text", nullable: true),
+                    Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -280,12 +281,12 @@ namespace ConstruControl.Infrastructure.Migrations
                 name: "DetallesCompra",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CompraId = table.Column<int>(type: "int", nullable: false),
-                    MaterialId = table.Column<int>(type: "int", nullable: false),
-                    Cantidad = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    PrecioUnitario = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CompraId = table.Column<int>(type: "integer", nullable: false),
+                    MaterialId = table.Column<int>(type: "integer", nullable: false),
+                    Cantidad = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
+                    PrecioUnitario = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -308,11 +309,11 @@ namespace ConstruControl.Infrastructure.Migrations
                 name: "Facturas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CompraId = table.Column<int>(type: "int", nullable: false),
-                    RutaArchivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FechaSubida = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CompraId = table.Column<int>(type: "integer", nullable: false),
+                    RutaArchivo = table.Column<string>(type: "text", nullable: false),
+                    FechaSubida = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
