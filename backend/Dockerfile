@@ -18,9 +18,16 @@ RUN dotnet publish ConstruControl.API/ConstruControl.API.csproj -c Release -o /a
 # Etapa 2: imagen final, mas liviana, solo con el runtime
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
+
+# libgssapi-krb5-2 es requerida por Npgsql (driver de PostgreSQL) para
+# negociar la conexion segura con Neon - no viene incluida en la imagen
+# base "aspnet" (mas liviana que la "sdk").
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgssapi-krb5-2 \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /app/publish .
 
-# Render asigna el puerto via la variable de entorno PORT
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 
