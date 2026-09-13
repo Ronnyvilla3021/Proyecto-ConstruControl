@@ -118,6 +118,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors(CorsPolicyFrontend);
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+
 app.MapControllers();
 app.MapHub<DashboardHub>("/hubs/dashboard");
 
